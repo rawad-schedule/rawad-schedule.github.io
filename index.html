@@ -106,6 +106,10 @@ tfoot th.lbl{text-align:right;padding-right:12px;font-weight:800;}
     <div class="s"><span contenteditable="true">من السبت 5 سبتمبر إلى الجمعة 11 سبتمبر 2026</span> &nbsp;•&nbsp; 6 أيام عمل × 8 ساعات = 48 ساعة أسبوعياً</div>
   </div>
 
+  <div style="display:flex;align-items:center;gap:8px;justify-content:center;margin-top:8px;font-size:12px;font-weight:700;color:#6B7480;">
+  <span id="cloudDot" style="width:10px;height:10px;border-radius:50%;background:#E0A030;display:inline-block;"></span>
+  <span>قاعدة البيانات: Supabase (السحابة) — البيانات محفوظة وتتحدث لكل الأجهزة</span>
+</div>
   <div class="hint">🖊️ قابل للتعديل بالكامل: عدّل الاسم، الفرع، حالة أساسي/احتياطي، أو الشفت من القوائم. القواعد تُطبَّق تلقائياً، والحفظ في جهازك.</div>
 
   <div class="rules">
@@ -165,9 +169,27 @@ const DAYS=["السبت", "الأحد", "الاثنين", "الثلاثاء", "�
 const OPTS=[["D","8 ص – 4 م"],["A","11 ص – 7 م"],["B","1 م – 9 م"],["E","3 م – 11 م"],["N","ليلي 12 ص – 8 ص"],["O","إجازة"]];
 const GIRLS7=["ريم","رغد"];
 const KEY="rawad_24h_v7";
+// ===== قاعدة بيانات Supabase السحابية =====
+const SUPA_URL="https://dpfmbcqluhonydvfkhwh.supabase.co";
+const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRwZm1iY3FsdWhvbnlkdmZraHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcyNzIzNDgsImV4cCI6MjEwMjg0ODM0OH0.w4k0bgjF2rkhLDzr4-XBbxTA6KqQe-JNpXK7UzrBB4M";
+const SUPA_HDR={"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"application/json","Prefer":"return=representation"};
+let cloudOK=false;
 let STATE=load();
 function load(){try{const s=localStorage.getItem(KEY);if(s)return JSON.parse(s);}catch(e){}return DEFAULTS.map(r=>({...r,shifts:[...r.shifts]}));}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(STATE));}catch(e){}}
+function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(STATE));}catch(e){}}
+let saveTimer=null;
+function save(){saveLocal();
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(async()=>{
+    try{
+      const hdr=Object.assign({},SUPA_HDR,{"Prefer":"resolution=merge-duplicates,return=minimal"});
+      const r=await fetch(SUPA_URL+"/rest/v1/schedule",{method:"POST",headers:hdr,
+        body:JSON.stringify({id:1,data:STATE,updated_at:new Date().toISOString()})});
+      setCloudDot(r.ok); cloudOK=r.ok;
+    }catch(e){ setCloudDot(false); }
+  },400);
+}
+function setCloudDot(ok){const el=document.getElementById("cloudDot");if(el){el.style.background=ok?"#2FB3A6":"#E0A030";el.title=ok?"متصل بقاعدة Supabase السحابية":"يعمل بالحفظ المحلي (تحقق من الاتصال/الجدول)";}}
 function head(){
   const tr=document.getElementById("headRow");tr.innerHTML="";
   const e=document.createElement("th");e.className="emp";e.textContent="الموظف / الفرع";tr.appendChild(e);
@@ -408,7 +430,24 @@ function importJSON(ev){
   rd.onload=()=>{try{const d=JSON.parse(rd.result);if(Array.isArray(d)){STATE=d;save();render();alert("تم الاستيراد بنجاح.");}else alert("ملف غير صالح.");}catch(e){alert("تعذر قراءة الملف.");}};
   rd.readAsText(f);ev.target.value="";
 }
-render();
+async function loadCloud(){
+  try{
+    const r=await fetch(SUPA_URL+"/rest/v1/schedule?id=eq.1&select=data",{headers:SUPA_HDR,cache:"no-store"});
+    if(r.ok){
+      const rows=await r.json();
+      if(rows&&rows.length&&Array.isArray(rows[0].data)&&rows[0].data.length){
+        STATE=rows[0].data; saveLocal(); render();
+      }else{
+        // أول مرة: ازرع البذرة الافتراضية في السحابة
+        STATE=DEFAULTS.map(x=>({...x,shifts:[...x.shifts]}));
+        await fetch(SUPA_URL+"/rest/v1/schedule",{method:"POST",headers:SUPA_HDR,body:JSON.stringify({id:1,data:STATE})});
+        saveLocal(); render();
+      }
+      cloudOK=true; setCloudDot(true);
+    }else setCloudDot(false);
+  }catch(e){ setCloudDot(false); }
+}
+render(); loadCloud();
 </script>
 </body>
 </html>
