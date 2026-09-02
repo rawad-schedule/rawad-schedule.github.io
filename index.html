@@ -448,7 +448,7 @@ async function loadCloud(){
         fetch(SUPA_URL+"/rest/v1/schedule",{method:"POST",headers:h,body:JSON.stringify({id:1,data:STATE,updated_at:new Date().toISOString()})});}
       setDot(true);}else{if(local){STATE=norm(local);render();}setDot(false);}
   }catch(e){if(local){STATE=norm(local);render();}setDot(false);}}
-
+render();loadCloud();
 </script>
 </body>
 </html>
