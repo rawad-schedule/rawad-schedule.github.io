@@ -1,0 +1,8 @@
+{
+  "name": "rawad-schedule",
+  "version": "1.0.0",
+  "description": "جدول شفتات شركة رواد النخبة — نسخة أونلاين بقاعدة بيانات",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "license": "MIT"
+}
