@@ -116,9 +116,12 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
 .sw.O{background:var(--off);color:var(--gray);}
 .badgebox{display:inline-flex;align-items:center;gap:8px;font-size:13px;margin:3px 0;}
 @media(max-width:760px){.cards{grid-template-columns:repeat(2,1fr);} body{padding:12px;} .hero h1{font-size:20px;}}
-@media print{body{background:#fff;padding:0;} .topbar,.cloudline{display:none!important;}
+@media print{body{background:#fff;padding:0;} .topbar,.cloudline,.drawer,.overlay,.modal,.rowmenu{display:none!important;}
   .panel{box-shadow:none;} table{min-width:0;border-spacing:3px;} tr{page-break-inside:avoid;} thead{display:table-header-group;}
   select.s{appearance:none;font-size:9px;} .cell{height:auto;} .more,.rowmenu{display:none!important;} .hero{box-shadow:none;}}
+.menugrid{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.menugrid .menubtn{justify-content:flex-start;padding:15px 14px;}
+@media(max-width:560px){.menugrid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -157,40 +160,43 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
 </div>
 
 <div class="overlay" id="overlay" onclick="closeAll()"></div>
-<aside class="drawer" id="drawer">
-  <h2>القائمة <button class="x" onclick="closeAll()">✕</button></h2>
-  <div class="body">
-    <button class="menubtn mb-teal" onclick="addRow();closeAll()"><span class="ico">➕</span> إضافة موظف</button>
-    <button class="menubtn mb-purp" onclick="generateRandom()"><span class="ico">🎲</span> توليد سيكل عشوائي جديد</button>
-    <button class="menubtn mb-night" onclick="window.print()"><span class="ico">🌙</span> طباعة / حفظ PDF</button>
-    <button class="menubtn mb-dark" onclick="exportExcel()"><span class="ico">📊</span> تصدير Excel / CSV</button>
-    <button class="menubtn mb-purp" onclick="exportJSON()"><span class="ico">💾</span> نسخة احتياطية JSON</button>
-    <button class="menubtn mb-ghost" onclick="document.getElementById('fileIn').click()"><span class="ico">📂</span> استيراد نسخة</button>
-    <button class="menubtn mb-ghost" onclick="resetTable()"><span class="ico">↺</span> استرجاع الجدول الأساسي</button>
-    <input type="file" id="fileIn" accept=".json" style="display:none" onchange="importJSON(event)">
-    <div class="cloudcard"><span id="cloudDot2"></span><span>المزامنة السحابية عبر Supabase — التعديلات تُحفظ وتظهر لكل الأجهزة فوراً.</span></div>
+<div class="modal" id="menuModal">
+  <div class="box">
+    <div class="mh"><h3>القائمة</h3><button onclick="closeAll()">✕</button></div>
+    <div class="mc">
+      <div class="menugrid">
+        <button class="menubtn mb-teal" onclick="addRow();closeAll()"><span class="ico">➕</span> إضافة موظف</button>
+        <button class="menubtn mb-purp" onclick="generateRandom()"><span class="ico">🎲</span> توليد سيكل عشوائي</button>
+        <button class="menubtn mb-night" onclick="closeAll();setTimeout(()=>window.print(),120)"><span class="ico">🖨️</span> طباعة / PDF</button>
+        <button class="menubtn mb-dark" onclick="exportExcel()"><span class="ico">📊</span> تصدير Excel</button>
+        <button class="menubtn mb-purp" onclick="exportJSON()"><span class="ico">💾</span> نسخة احتياطية JSON</button>
+        <button class="menubtn mb-dark" onclick="document.getElementById('fileIn').click()"><span class="ico">📂</span> استيراد نسخة</button>
+        <button class="menubtn mb-ghost" style="grid-column:1/-1" onclick="resetTable()"><span class="ico">↺</span> استرجاع الجدول الأساسي</button>
+      </div>
+      <input type="file" id="fileIn" accept=".json" style="display:none" onchange="importJSON(event)">
+      <div class="cloudcard" style="margin-top:14px"><span id="cloudDot2"></span><span>المزامنة السحابية عبر Supabase — تعديلاتك تُحفظ وتظهر لكل الأجهزة.</span></div>
+    </div>
   </div>
-</aside>
+</div>
 
 <div class="modal" id="infoModal">
   <div class="box">
     <div class="mh"><h3>القواعد ومفتاح الجدول</h3><button onclick="closeAll()">✕</button></div>
     <div class="mc">
       <h4>🖊️ التعديل</h4>
-      اضغط اسم الموظف لتغييره، واختر الفرع/الحالة/الشفت من القوائم، وزر ⋮ للحذف أو التحويل لاحتياطي. الحفظ سحابي تلقائي.
+      اضغط اسم الموظف لتغييره، واختر الفرع أو الشفت من القوائم بحرية كاملة، وزر ⋮ لحذف الموظف. كل التعديلات تُحفظ سحابياً تلقائياً وتظهر فوراً لكل الأجهزة.
       <h4>📋 معايير توزيع اليوم</h4>
       • <b>الافتتاح الصباحي (8ص–4م):</b> موظف واحد فقط من جدة + موظف واحد فقط من الطائف.<br>
       • <b>الليلي (12ص–8ص):</b> شخص واحد فقط يومياً (أي فرع عدا مصر، والأفضل من جدة)، واليوم التالي إجازة.<br>
       • <b>شيفتات الوسط / نص اليوم (11–7، 1–9، 3–11):</b> التغذية من كل الفروع مختلطة، وتُغطّى الذروة (3–5 عصراً) بتداخلها.<br>
       • جدة تعمل حتى 11 مساءً (3–11)، والطائف حتى 9 مساءً (1–9 فقط)، ومصر كول سنتر بلا ليلي.
-      <h4>👧 الموظفات والاحتياط</h4>
-      البنات أقصى انصراف 9 مساءً، و<b>ريم ورغد</b> أقصى انصراف 7 مساءً (11–7 فقط). الاحتياطيون لا يُعتمد عليهم منفردين ولا يعملون ليلي.
+      <h4>👧 الموظفات</h4>
+      البنات أقصى انصراف 9 مساءً، و<b>ريم ورغد</b> أقصى انصراف 7 مساءً (11–7 فقط).
       <h4>🏷️ الفروع</h4>
       <div class="legend">
         <span class="badgebox"><span class="badge j">جده</span> جدة (حتى 11 م + ليلي)</span>
         <span class="badgebox"><span class="badge t">طائف</span> الطائف (حتى 9 م + ليلي)</span>
         <span class="badgebox"><span class="badge e">مصر</span> كول سنتر فقط</span>
-        <span class="badgebox"><span class="badge bk">احتياطي</span> لا يُعتمد عليه منفرداً</span>
       </div>
       <h4>🎨 مفتاح الشيفتات</h4>
       <div class="legend">
@@ -206,7 +212,7 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
 </div>
 
 <script>
-const DAYS=["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"], DATES=["5 سبتمبر 2026", "6 سبتمبر 2026", "7 سبتمبر 2026", "8 سبتمبر 2026", "9 سبتمبر 2026", "10 سبتمبر 2026", "11 سبتمبر 2026"], SEED=[{"name":"لولوه","br":"جده","backup":true,"f":1,"shifts":["B","A","B","A","B","B","O"]},{"name":"لينا","br":"جده","backup":false,"f":1,"shifts":["B","A","D","N","O","A","O"]},{"name":"فتون","br":"جده","backup":false,"f":1,"shifts":["D","N","O","A","A","B","O"]},{"name":"سماح","br":"طائف","backup":false,"f":1,"shifts":["D","B","B","D","B","D","O"]},{"name":"الهنوف","br":"طائف","backup":false,"f":1,"shifts":["B","B","A","A","D","A","O"]},{"name":"ريم","br":"مصر","backup":false,"f":1,"shifts":["A","A","A","A","A","A","O"]},{"name":"رغد","br":"مصر","backup":false,"f":1,"shifts":["A","A","A","A","A","A","O"]},{"name":"مشاري","br":"جده","backup":true,"f":0,"shifts":["E","B","B","E","E","E","O"]},{"name":"وليد","br":"جده","backup":false,"f":0,"shifts":["E","D","N","O","D","E","O"]},{"name":"شهاب","br":"جده","backup":false,"f":0,"shifts":["N","O","E","D","E","D","E"]},{"name":"خالد","br":"جده","backup":false,"f":0,"shifts":["E","E","E","E","N","O","E"]},{"name":"تركي","br":"طائف","backup":false,"f":0,"shifts":["B","B","B","B","O","B","N"]},{"name":"عبداللطيف","br":"طائف","backup":false,"f":0,"shifts":["B","D","D","B","B","N","O"]},{"name":"احمد حسن","br":"مصر","backup":false,"f":0,"shifts":["E","B","B","B","B","B","O"]},{"name":"طارق","br":"مصر","backup":true,"f":0,"shifts":["B","B","B","B","B","B","O"]},{"name":"عبدالله","br":"مصر","backup":false,"f":0,"shifts":["O","B","B","B","B","B","E"]},{"name":"ابراهيم","br":"مصر","backup":true,"f":0,"shifts":["B","B","B","B","B","B","O"]}];
+const DAYS=["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"], DATES=["5 سبتمبر 2026", "6 سبتمبر 2026", "7 سبتمبر 2026", "8 سبتمبر 2026", "9 سبتمبر 2026", "10 سبتمبر 2026", "11 سبتمبر 2026"], SEED=[{"name":"لولوه","br":"جده","f":1,"shifts":["N","O","B","D","A","D","O"]},{"name":"لينا","br":"جده","f":1,"shifts":["A","D","A","B","N","O","O"]},{"name":"فتون","br":"جده","f":1,"shifts":["A","B","A","A","B","N","O"]},{"name":"سماح","br":"طائف","f":1,"shifts":["D","B","B","B","B","D","O"]},{"name":"الهنوف","br":"طائف","f":1,"shifts":["B","D","D","A","A","B","O"]},{"name":"ريم","br":"مصر","f":1,"shifts":["A","A","A","A","A","A","O"]},{"name":"رغد","br":"مصر","f":1,"shifts":["A","A","A","A","A","A","O"]},{"name":"مشاري","br":"جده","f":0,"shifts":["B","N","O","E","D","E","E"]},{"name":"وليد","br":"جده","f":0,"shifts":["E","E","D","N","O","B","O"]},{"name":"شهاب","br":"جده","f":0,"shifts":["D","E","E","O","E","B","N"]},{"name":"خالد","br":"جده","f":0,"shifts":["B","E","N","O","E","B","E"]},{"name":"تركي","br":"طائف","f":0,"shifts":["B","B","B","D","D","B","O"]},{"name":"عبداللطيف","br":"طائف","f":0,"shifts":["B","B","O","B","B","B","B"]},{"name":"احمد حسن","br":"مصر","f":0,"shifts":["E","B","B","B","E","B","O"]},{"name":"طارق","br":"مصر","f":0,"shifts":["B","B","B","B","B","B","O"]},{"name":"عبدالله","br":"مصر","f":0,"shifts":["B","B","B","B","B","B","O"]},{"name":"ابراهيم","br":"مصر","f":0,"shifts":["B","B","B","B","B","B","O"]}];
 const OPTS=[["D","8 ص – 4 م"],["A","11 ص – 7 م"],["B","1 م – 9 م"],["E","3 م – 11 م"],["N","ليلي 12 ص – 8 ص"],["O","إجازة"]];
 const GIRLS7=["ريم","رغد"];
 const KEY="rawad_24h_v9";
@@ -224,9 +230,9 @@ function save(){saveLocal();clearTimeout(saveTimer);saveTimer=setTimeout(async()
     cloudOK=r.ok;setDot(r.ok);}catch(e){setDot(false);}},400);}
 function setDot(ok){["cloudDot","cloudDot2"].forEach(id=>{const el=document.getElementById(id);if(el)el.style.background=ok?"#2FB3A6":"#E0A636";});
   const t=document.getElementById("cloudTxt");if(t)t.textContent=ok?"متصل بقاعدة البيانات — التعديلات محفوظة سحابياً لكل الأجهزة":"يعمل بالحفظ المحلي مؤقتاً (تحقق من الاتصال).";}
-function openMenu(){document.getElementById("drawer").classList.add("open");document.getElementById("overlay").classList.add("open");}
+function openMenu(){document.getElementById("menuModal").classList.add("open");document.getElementById("overlay").classList.add("open");}
 function openInfo(){document.getElementById("infoModal").classList.add("open");document.getElementById("overlay").classList.add("open");}
-function closeAll(){document.getElementById("drawer").classList.remove("open");document.getElementById("infoModal").classList.remove("open");
+function closeAll(){["drawer","menuModal","infoModal"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove("open");});
   document.getElementById("overlay").classList.remove("open");document.querySelectorAll(".rowmenu").forEach(m=>m.classList.remove("open"));}
 document.addEventListener("click",e=>{if(!e.target.closest(".empcell"))document.querySelectorAll(".rowmenu").forEach(m=>m.classList.remove("open"));});
 function isGirl(r){return !!r.f;}
@@ -244,15 +250,7 @@ function shiftCell(val,ri,ci){
   w.appendChild(sel);td.appendChild(w);return td;
 }
 function applyShift(ri,ci,val,prev,sel){
-  const r=STATE[ri];const fail=m=>{alert(m);sel.value=prev;sel.className="s "+prev;};
-  if(val==="N"){if(r.br==="مصر")return fail("مصر كول سنتر لا تعمل الليلي.");if(r.backup)return fail("الاحتياطي لا يعمل الليلي.");
-    if(STATE.some(x=>x.shifts[ci]==="N"))return fail("يوجد بالفعل شيفت ليلي واحد هذا اليوم.");if(ci<6)r.shifts[ci+1]="O";}
-  if(val==="D"){const c=STATE.filter(x=>x.br===r.br&&x!==r&&x.shifts[ci]==="D").length;
-    if((r.br==="جده"||r.br==="طائف")&&c>=1)return fail("الافتتاح الصباحي موظف واحد فقط من الفرع — اختر شيفت وسط.");}
-  if(val==="E"){if(r.br==="طائف")return fail("الطائف حتى 9 مساءً — اختر 1–9.");if(isGirl(r))return fail("الموظفات لا يعملن 3–11.");}
-  if(val==="B"&&GIRLS7.includes(r.name))return fail("ريم ورغد حتى 7 مساءً — اختر 11–7.");
-  if(val!=="O"&&ci>0&&r.shifts[ci-1]==="N")return fail("اليوم بعد الليلي إجازة.");
-  r.shifts[ci]=val;if(val==="N"&&ci===6)alert("ليلي الجمعة ← إجازة السبت في الأسبوع التالي.");
+  STATE[ri].shifts[ci]=val;
   save();render();}
 function render(){
   head();const tb=document.getElementById("tb");tb.innerHTML="";
@@ -263,21 +261,14 @@ function render(){
     span.addEventListener("blur",()=>{row.name=span.textContent.trim()||"بدون اسم";save();});
     const more=document.createElement("button");more.className="more";more.textContent="⋮";
     const menu=document.createElement("div");menu.className="rowmenu";
-    const bkopt=document.createElement("button");bkopt.textContent=row.backup?"☆ تحويل إلى أساسي":"🏷 تحويل إلى احتياطي";
-    bkopt.onclick=e=>{e.stopPropagation();STATE[ri].backup=!STATE[ri].backup;save();render();};
     const del=document.createElement("button");del.className="danger";del.textContent="🗑 حذف الموظف";
     del.onclick=e=>{e.stopPropagation();if(confirm("حذف "+row.name+"؟")){STATE.splice(ri,1);save();render();}};
-    menu.appendChild(bkopt);menu.appendChild(del);
+    menu.appendChild(del);
     more.addEventListener("click",e=>{e.stopPropagation();document.querySelectorAll(".rowmenu").forEach(m=>{if(m!==menu)m.classList.remove("open");});menu.classList.toggle("open");});
-    const bk=document.createElement("button");bk.type="button";bk.className="badge "+(row.backup?"bk":"st");
-    bk.textContent=row.backup?"احتياطي":"☆ أساسي";bk.onclick=()=>{STATE[ri].backup=!STATE[ri].backup;save();render();};
     const bb=document.createElement("select");bb.className="brsel "+row.br;
     ["جده","طائف","مصر"].forEach(b=>{const o=document.createElement("option");o.value=b;o.textContent=b;if(b===row.br)o.selected=true;bb.appendChild(o);});
-    bb.addEventListener("change",()=>{row.br=bb.value;
-      if(row.br==="طائف"){const k=row.shifts.findIndex(s=>s==="E");if(k>=0){row.shifts[k]="B";alert("حُوّل 3–11 إلى 1–9 (الطائف حتى 9).");}}
-      if(row.br==="مصر"){const k=row.shifts.findIndex(s=>s==="N");if(k>=0){row.shifts[k]="A";alert("مصر بلا ليلي.");}}
-      bb.className="brsel "+row.br;save();render();});
-    ec.appendChild(span);ec.appendChild(bk);ec.appendChild(bb);ec.appendChild(more);ec.appendChild(menu);
+    bb.addEventListener("change",()=>{row.br=bb.value;bb.className="brsel "+row.br;save();render();});
+    ec.appendChild(span);ec.appendChild(bb);ec.appendChild(more);ec.appendChild(menu);
     nm.appendChild(ec);tr.appendChild(nm);
     row.shifts.forEach((v,ci)=>tr.appendChild(shiftCell(v,ri,ci)));
     const work=row.shifts.filter(x=>x!=="O").length;
@@ -309,7 +300,7 @@ function validate(S){
   for(const r of S){const work=r.shifts.filter(x=>x!=="O").length;
     if(work<5||work>6)return "أيام العمل غير سليمة";
     for(let i=0;i<7;i++){const x=r.shifts[i];
-      if(x==="N"){if(r.br==="مصر"||r.backup)return "ليلي غير صالح";if(i<6&&r.shifts[i+1]!=="O")return "ليلي بلا إجازة";
+      if(x==="N"){if(r.br==="مصر")return "ليلي غير صالح";if(i<6&&r.shifts[i+1]!=="O")return "ليلي بلا إجازة";
         if(r.shifts.filter(y=>y==="N").length>1)return "أكثر من ليلي";}
       if(x==="E"&&(r.br==="طائف"||isGirl(r)))return "3–11 غير مسموح";
       if(x==="B"&&GIRLS7.includes(r.name))return "ريم/رغد بعد 7";}}
@@ -319,15 +310,14 @@ function validate(S){
       if(S.filter(r=>r.br==="جده"&&r.shifts[di]==="D").length!==1)return "صباحي جدة يجب أن يكون واحداً";
       if(S.filter(r=>r.br==="طائف"&&r.shifts[di]==="D").length!==1)return "صباحي الطائف يجب أن يكون واحداً";
       if(!S.some(r=>r.br==="طائف"&&r.shifts[di]==="B"))return "الطائف بلا تغطية مساء (1–9)";
-      if(!S.some(r=>r.br==="جده"&&!r.backup&&r.shifts[di]==="E"))return "جدة بلا إغلاق (3–11)";
+      if(!S.some(r=>r.br==="جده"&&!isGirl(r)&&r.shifts[di]==="E"))return "جدة بلا إغلاق (3–11)";
       if(!S.some(r=>r.br==="مصر"&&r.shifts[di]!=="O"&&r.shifts[di]!=="N"))return "كول سنتر بلا تغطية";
       if(S.filter(r=>r.shifts[di]==="O").length>3)return "إجازات كثيرة في يوم";
     }else{
-      if(S.some(r=>isGirl(r)&&r.shifts[di]!=="O")||S.some(r=>r.backup&&r.shifts[di]!=="O"))return "الجمعة للشباب الأساسيين فقط";
+      if(S.some(r=>isGirl(r)&&r.shifts[di]!=="O"))return "الجمعة للشباب فقط";
       const w=S.filter(r=>r.shifts[di]!=="O");
       if(w.length<4)return "تغطية الجمعة قليلة";
     }
-    for(const c of ["A","B","E"]){const g=S.filter(r=>r.shifts[di]===c);if(g.length&&g.every(r=>r.backup))return "شيفت باحتياطيين فقط";}
   }
   return null;}
 function buildRandom(){
@@ -335,34 +325,34 @@ function buildRandom(){
     const S=SEED.map(r=>({...r,shifts:Array(7).fill(null)}));
     const avail=(r,di)=>r.shifts[di]===null && r.shifts[di-1]!=="N";
     // 1) الليالي (تفضيل جدة) — واحد يومياً، اليوم بعده إجازة
-    const nightPool=[...shuffle(S.filter(r=>r.br==="جده"&&!r.backup)),...shuffle(S.filter(r=>r.br==="طائف"&&!r.backup))];
+    const nightPool=[...shuffle(S.filter(r=>r.br==="جده")),...shuffle(S.filter(r=>r.br==="طائف"))];
     let n=0;
     for(let di=0;di<7&&n<7;di++){
       const c=nightPool[n];
       if(c){c.shifts[di]="N";if(di<6)c.shifts[di+1]="O";n++;}
     }
     if(n<7)continue;
-    // 2) الجمعة: بنات واحتياط إجازة
-    S.forEach(r=>{if((isGirl(r)||r.backup))r.shifts[6]="O";});
-    const friMales=shuffle(S.filter(r=>!isGirl(r)&&!r.backup&&r.shifts[6]===null));
+    // 2) الجمعة: البنات إجازة
+    S.forEach(r=>{if(isGirl(r))r.shifts[6]="O";});
+    const friMales=shuffle(S.filter(r=>!isGirl(r)&&r.shifts[6]===null));
     friMales.slice(0,3).forEach((r,i)=>{r.shifts[6]=r.br==="طائف"?"B":"E";});
     S.forEach(r=>{if(r.shifts[6]===null)r.shifts[6]="O";});
     // 3) كل يوم سبت–خميس
     for(let di=0;di<6;di++){
       const free=r=>r.shifts[di]===null;
-      // افتتاح: واحد جده D + واحد طائف D (أساسيون)
-      const jd=shuffle(S.filter(r=>r.br==="جده"&&!r.backup&&free(r)&&r.shifts[di-1]!=="N"))[0];
+      // افتتاح: واحد جده D + واحد طائف D
+      const jd=shuffle(S.filter(r=>r.br==="جده"&&free(r)&&r.shifts[di-1]!=="N"))[0];
       if(jd)jd.shifts[di]="D";
-      const td=shuffle(S.filter(r=>r.br==="طائف"&&!r.backup&&free(r)&&r.shifts[di-1]!=="N"))[0];
+      const td=shuffle(S.filter(r=>r.br==="طائف"&&free(r)&&r.shifts[di-1]!=="N"))[0];
       if(td)td.shifts[di]="D";
-      // إغلاق جدة E (أساسي شاب جده)
-      const je=shuffle(S.filter(r=>r.br==="جده"&&!isGirl(r)&&!r.backup&&free(r)))[0];
+      // إغلاق جدة E (شاب جده)
+      const je=shuffle(S.filter(r=>r.br==="جده"&&!isGirl(r)&&free(r)))[0];
       if(je)je.shifts[di]="E";
       // مساء الطائف B (طائف)
-      const tb=shuffle(S.filter(r=>r.br==="طائف"&&!r.backup&&free(r)))[0];
+      const tb=shuffle(S.filter(r=>r.br==="طائف"&&free(r)))[0];
       if(tb)tb.shifts[di]="B";
       // كول سنتر: واحد على الأقل وسط
-      const ec=shuffle(S.filter(r=>r.br==="مصر"&&!r.backup&&free(r)))[0];
+      const ec=shuffle(S.filter(r=>r.br==="مصر"&&free(r)))[0];
       if(ec)ec.shifts[di]=pick(["B","E"]);
       // الباقي: وسط من كل الفروع
       const rest=shuffle(S.filter(r=>free(r)));
@@ -404,32 +394,61 @@ function generateRandom(){
   if(!confirm("توليد سيكل جديد بالقواعد (صباحي واحد لكل فرع + ليلي واحد)؟"))return;
   const res=buildRandom();if(!res){alert("تعذّر التوليد — جرّب مرة أخرى.");return;}
   STATE=res;save();closeAll();render();}
-function addRow(){STATE.push({name:"موظف جديد",br:"جده",backup:false,f:0,shifts:["D","D","D","D","D","D","O"]});save();render();}
+function addRow(){STATE.push({name:"موظف جديد",br:"جده",f:0,shifts:["O","O","O","O","O","O","O"]});save();render();}
 function resetTable(){if(confirm("استرجاع الجدول الأساسي؟")){STATE=SEED.map(r=>({...r,shifts:[...r.shifts]}));save();render();}}
 const LAB={D:"8ص–4م",A:"11ص–7م",B:"1م–9م",E:"3م–11م",N:"ليلي 12ص–8ص",O:"إجازة"};
+const XL={D:["#E8F6F4","#0C5160"],A:["#EFEEF9","#4F4F9E"],B:["#5B5BB0","#FFFFFF"],E:["#0C5160","#FFFFFF"],N:["#332C64","#FFFFFF"],O:["#EFF2F4","#64747E"]};
 function exportExcel(){
-  const aoa=[["شركة رواد النخبة — جدول الشفتات"],["الموظف","الفرع","الحالة",...DAYS.map((d,i)=>d+" "+DATES[i]),"الساعات"]];
-  STATE.forEach(r=>aoa.push([r.name,r.br,r.backup?"احتياطي":"أساسي",...r.shifts.map(s=>LAB[s]),r.shifts.filter(s=>s!=="O").length*8]));
-  aoa.push([]);aoa.push(["اليوم",...DAYS]);
-  aoa.push(["عاملون",...DAYS.map((d,di)=>STATE.filter(r=>r.shifts[di]!=="O").length)]);
-  aoa.push(["الليلي",...DAYS.map((d,di)=>STATE.filter(r=>r.shifts[di]==="N").map(r=>r.name).join("،")||"-")]);
-  const csv="﻿"+aoa.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(",")).join("\n");
-  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="جدول_رواد_النخبة.csv";a.click();}
+  const h=c=>String(c).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const brColor={جده:"#0C5160",طائف:"#6E6EB8",مصر:"#2FB3A6"};
+  let t='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="UTF-8">'
+    +'<style>td,th{mso-number-format:"\\@";font-family:Cairo,Arial,sans-serif;border:1px solid #D8E0E6;}th{font-weight:bold;}</style></head><body dir="rtl">';
+  t+='<table border="1" cellspacing="2" cellpadding="6">';
+  t+='<tr><td colspan="10" style="background:#0C5160;color:#fff;font-size:18px;font-weight:bold;text-align:center;padding:12px">شركة رواد النخبة للاستقدام — RAWAD ALNUKHBA</td></tr>';
+  t+='<tr><td colspan="10" style="background:#2FB3A6;color:#fff;font-size:13px;font-weight:bold;text-align:center;padding:8px">جدول الشفتات (تشغيل 24 ساعة) — من السبت 5 سبتمبر إلى الجمعة 11 سبتمبر 2026</td></tr>';
+  t+='<tr style="background:#0C5160;color:#fff;font-weight:bold;text-align:center">';
+  t+='<th style="width:150px">الموظف</th><th style="width:70px">الفرع</th>';
+  DAYS.forEach((d,i)=>t+='<th style="width:95px">'+h(d)+'<br><span style="font-size:10px;font-weight:normal">'+h(DATES[i])+'</span></th>');
+  t+='<th style="width:60px">الساعات</th></tr>';
+  STATE.forEach(r=>{
+    t+='<tr><td style="text-align:right;font-weight:bold;color:#0C5160">'+h(r.name)+'</td>';
+    t+='<td style="text-align:center;font-weight:bold;color:#fff;background:'+(brColor[r.br]||"#666")+'">'+h(r.br)+'</td>';
+    r.shifts.forEach(s=>{const[bg,fg]=XL[s];t+='<td style="text-align:center;font-weight:bold;background:'+bg+';color:'+fg+'">'+h(LAB[s])+'</td>';});
+    t+='<td style="text-align:center;font-weight:bold;background:#E8F6F4;color:#0C5160">'+(r.shifts.filter(s=>s!=="O").length*8)+' س</td></tr>';
+  });
+  t+='<tr><td colspan="10"></td></tr>';
+  const sum=(lbl,fn,bg)=>{t+='<tr style="background:'+bg+';color:#fff;font-weight:bold"><td style="text-align:right">'+h(lbl)+'</td><td></td>';
+    DAYS.forEach((d,di)=>t+='<td style="text-align:center;font-size:11px">'+h(fn(di))+'</td>');t+='<td></td></tr>';};
+  sum("القوة اليومية",di=>STATE.filter(r=>r.shifts[di]!=="O").length+" عامل","#0C5160");
+  sum("الليلي 12ص–8ص",di=>STATE.filter(r=>r.shifts[di]==="N").map(r=>r.name).join("، ")||"—","#332C64");
+  sum("جدة",di=>STATE.filter(r=>r.br==="جده"&&r.shifts[di]!=="O").length,"#15808F");
+  sum("الطائف",di=>STATE.filter(r=>r.br==="طائف"&&r.shifts[di]!=="O").length,"#6E6EB8");
+  sum("مصر كول سنتر",di=>STATE.filter(r=>r.br==="مصر"&&r.shifts[di]!=="O").length,"#2FB3A6");
+  t+='</table></body></html>';
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["﻿"+t],{type:"application/vnd.ms-excel"}));
+  a.download="جدول_رواد_النخبة.xls";a.click();}
 function exportJSON(){const b=new Blob([JSON.stringify(STATE,null,2)],{type:"application/json"});
   const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="رواد_النخبة_نسخة.json";a.click();}
 function importJSON(ev){const f=ev.target.files[0];if(!f)return;const rd=new FileReader();
   rd.onload=()=>{try{const d=JSON.parse(rd.result);if(Array.isArray(d)){STATE=d;save();render();closeAll();alert("تم الاستيراد.");}else alert("ملف غير صالح.");}catch(e){alert("تعذر القراءة.");}};
   rd.readAsText(f);ev.target.value="";}
 async function loadCloud(){
+  const norm=d=>d.map(r=>({name:r.name,br:r.br,f:r.f?1:0,shifts:r.shifts||["O","O","O","O","O","O","O"]}));
+  let local=null;try{const s=localStorage.getItem(KEY);if(s)local=JSON.parse(s);}catch(e){}
   try{const r=await fetch(SUPA_URL+"/rest/v1/schedule?id=eq.1&select=data",{headers:SUPA_HDR,cache:"no-store"});
-    if(r.ok){const rows=await r.json();
-      if(rows&&rows.length&&Array.isArray(rows[0].data)&&rows[0].data.length){STATE=rows[0].data;saveLocal();render();}
-      else{const g=buildRandom()||SEED.map(x=>({...x,shifts:[...x.shifts]}));STATE=g;
+    if(r.ok){const rows=await r.json();const cloud=rows&&rows.length&&Array.isArray(rows[0].data)&&rows[0].data.length?norm(rows[0].data):null;
+      if(local&&Array.isArray(local)&&local.length){STATE=norm(local);render();}
+      else if(cloud){STATE=cloud;saveLocal();render();}
+      else{const g=buildRandom()?norm(buildRandom()):norm(SEED.map(x=>({...x,shifts:[...x.shifts]})));STATE=g;saveLocal();render();
         const h=Object.assign({},SUPA_HDR,{"Prefer":"resolution=merge-duplicates,return=minimal"});
-        await fetch(SUPA_URL+"/rest/v1/schedule",{method:"POST",headers:h,body:JSON.stringify({id:1,data:STATE})});saveLocal();render();}
-      setDot(true);}else setDot(false);
-  }catch(e){setDot(false);}}
-render();loadCloud();
+        await fetch(SUPA_URL+"/rest/v1/schedule",{method:"POST",headers:h,body:JSON.stringify({id:1,data:STATE})});}
+      // إذا كانت النسخة المحلية أحدث (عدّل المستخدم للتو)، ادفعها للسحابة
+      if(local&&cloud&&JSON.stringify(norm(local))!==JSON.stringify(cloud)){
+        const h=Object.assign({},SUPA_HDR,{"Prefer":"resolution=merge-duplicates,return=minimal"});
+        fetch(SUPA_URL+"/rest/v1/schedule",{method:"POST",headers:h,body:JSON.stringify({id:1,data:STATE,updated_at:new Date().toISOString()})});}
+      setDot(true);}else{if(local){STATE=norm(local);render();}setDot(false);}
+  }catch(e){if(local){STATE=norm(local);render();}setDot(false);}}
+
 </script>
 </body>
 </html>
