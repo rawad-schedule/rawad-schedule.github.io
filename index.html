@@ -51,12 +51,13 @@ h1,h2,h3,h4{font-weight:800;}
 .tab.active{background:linear-gradient(135deg,#0C5160,#2FB3A6);color:#fff;}
 .tab.active .cnt{background:rgba(255,255,255,.22);color:#fff;}
 tr.grouphd td{background:linear-gradient(135deg,#0C5160,#5B5BB0);color:#fff;font-weight:800;font-size:13px;border-radius:10px;padding:8px;text-align:right;}
-table{border-collapse:separate;border-spacing:5px;width:100%;min-width:1120px;}
+table{border-collapse:separate;border-spacing:5px;width:100%;min-width:1120px;table-layout:fixed;}
 th,td{text-align:center;vertical-align:middle;}
+thead th.emp{min-width:0;width:215px;}
+tfoot th.lbl{width:215px;}
 thead th{background:var(--teal-d);color:#fff;border-radius:12px;padding:12px 6px;font-size:13px;font-weight:700;}
 thead th.fri{background:var(--purple-d);}
 thead th .d{display:block;font-size:11px;opacity:.9;font-weight:600;margin-top:2px;}
-thead th.emp{min-width:225px;}
 .empcell{display:flex;align-items:center;gap:6px;justify-content:flex-end;background:#fff;border:1px solid var(--line);border-radius:12px;padding:7px 9px;position:relative;}
 .empcell .nm{font-weight:800;color:var(--teal-d);font-size:15px;outline:none;border-radius:7px;padding:2px 5px;flex:1;text-align:right;}
 .empcell .nm:focus{background:var(--teal-soft);}
@@ -77,7 +78,9 @@ thead th.emp{min-width:225px;}
 .rowmenu button{display:block;width:100%;text-align:right;background:#fff;border:0;padding:11px 13px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;color:var(--ink);}
 .rowmenu button:hover{background:var(--teal-soft);}
 .rowmenu button.danger{color:#C0392B;}
-.cell{border:1px solid var(--line);border-radius:12px;overflow:hidden;height:58px;}
+.cell{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;height:64px;}
+.cell .dropdown{height:64px;width:100%;}
+.cell .dd-btn{width:100%;height:64px;min-height:64px;border-radius:11px;}
 select.s{width:100%;height:100%;border:0;background:transparent;appearance:none;-webkit-appearance:none;font-family:inherit;font-weight:800;font-size:11.5px;text-align:center;direction:rtl;cursor:pointer;padding:3px 2px;outline:none;}
 select.s.D{color:var(--teal-d);background:var(--teal-soft);}
 select.s.K{color:#1A5FA0;background:#E2EEFB;}
@@ -141,7 +144,7 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
 @media print{body{background:#fff;padding:0;} .topbar,.cloudline,.tabs,.drawer,.overlay,.modal,.rowmenu{display:none!important;}
   .panel{box-shadow:none;} table{min-width:0;border-spacing:3px;} tr{page-break-inside:avoid;} thead{display:table-header-group;}
   select.s{appearance:none;font-size:9px;} .cell{height:auto;} .more,.rowmenu,.dd-arrow,.dd-menu{display:none!important;} .hero{box-shadow:none;}
-  .rest-tag,.rest-badge{print-color-adjust:exact;-webkit-print-color-adjust:exact;}}
+  .rest-bar,.rest-badge{print-color-adjust:exact;-webkit-print-color-adjust:exact;}}
 .menugrid{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
 .menugrid .menubtn{justify-content:flex-start;padding:15px 14px;}
 @media(max-width:560px){.menugrid{grid-template-columns:1fr;}}
@@ -179,13 +182,13 @@ body.locked .readonly-note{display:block;}
 .dd-btn.مصر{background:#fff;color:var(--teal-d);border-color:var(--teal);}
 .dd-btn.أوبريشن{background:#1B7A43;color:#fff;border-color:#1B7A43;}
 
-/* ===== بطاقات الشيفتات الاحترافية ===== */
-.dd-btn{position:relative;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:5px 6px;
-  border-radius:10px;font-family:inherit;border:0;overflow:hidden;min-height:50px;}
-.s-ico{position:absolute;top:4px;right:6px;font-size:11px;line-height:1;opacity:.95;z-index:1;}
-.s-lb{font-size:8.5px;font-weight:700;opacity:.72;letter-spacing:.2px;line-height:1;z-index:2;}
-.s-tm{font-size:12.5px;font-weight:800;line-height:1.25;z-index:2;white-space:nowrap;}
-.s-tm.two{font-size:10px;font-weight:800;line-height:1.4;white-space:normal;}
+/* ===== بطاقات الشيفتات الاحترافية (خلايا المواعيد فقط) ===== */
+.cell .dd-btn{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  padding:4px 6px;border-radius:11px;font-family:inherit;border:0;overflow:hidden;min-height:64px;}
+.cell .s-ico{position:absolute;top:4px;right:6px;font-size:10px;line-height:1;opacity:.9;z-index:1;}
+.cell .s-lb{font-size:8px;font-weight:700;opacity:.72;letter-spacing:.2px;line-height:1;z-index:2;}
+.cell .s-tm{font-size:11.5px;font-weight:800;line-height:1.2;z-index:2;white-space:nowrap;}
+.cell .s-tm.two{font-size:9.5px;font-weight:800;line-height:1.35;white-space:normal;}
 /* صباحي */
 .m-d{background:linear-gradient(180deg,#DDF1EE,#C7E8E3);color:#0C5160;}
 .m-k{background:linear-gradient(180deg,#DCECFB,#C4DEF5);color:#15508F;}
@@ -205,17 +208,13 @@ body.locked .readonly-note{display:block;}
 .m-o{background:#EFF2F4;color:#8A979F;}
 .m-o .s-tm{font-size:11px;font-weight:800;}
 
-/* ===== شريط تحذير الراحة (داخل المربع، واضح غير متداخل) ===== */
-.rest-tag{position:absolute;left:0;right:0;bottom:0;z-index:5;font-size:8.5px;font-weight:800;text-align:center;
-  padding:1px 2px;border-radius:0 0 9px 9px;line-height:1.3;pointer-events:none;}
-.rest-tag.warn{background:#FFD54A;color:#4a3800;}
-.rest-tag.red{background:#E23B3B;color:#fff;}
-td:has(.rest-tag.warn) .cell{box-shadow:inset 0 0 0 2.5px #FFD54A;border-radius:12px;}
-td:has(.rest-tag.red) .cell{box-shadow:inset 0 0 0 2.5px #E23B3B;border-radius:12px;}
-/* شارة علوية صغيرة */
-.rest-badge{position:absolute;top:-7px;left:-7px;z-index:7;min-width:18px;height:18px;padding:0 3px;border-radius:9px;
-  display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;border:2px solid #fff;cursor:help;
-  background:#FFD54A;color:#4a3800;box-shadow:0 2px 6px rgba(0,0,0,.25);}
+/* ===== تحذير الراحة: شريط رفيع أعلى المربع + شارة ركن (لا يكسر التناسق) ===== */
+.rest-bar{position:absolute;left:0;right:0;top:0;height:5px;z-index:6;pointer-events:none;border-radius:11px 11px 0 0;}
+.rest-bar.warn{background:#FFB020;}
+.rest-bar.red{background:#E23B3B;}
+.rest-badge{position:absolute;top:-8px;left:-8px;z-index:8;width:20px;height:20px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;border:2px solid #fff;cursor:help;
+  background:#FFB020;color:#4a3800;box-shadow:0 2px 6px rgba(0,0,0,.28);}
 .rest-badge.red{background:#E23B3B;color:#fff;}
 
 /* ===== نوافذ تنبيه/تأكيد/إدخال مخصصة ===== */
@@ -337,9 +336,9 @@ td:has(.rest-tag.red) .cell{box-shadow:inset 0 0 0 2.5px #E23B3B;border-radius:1
       </div>
       <h4>⚠️ تنبيهات الراحة بين الشيفتات</h4>
       لازم الفرق بين نهاية شيفت وبداية الشيفت التالي <b>12 ساعة على الأقل</b> لكل موظف:
-      <span class="badgebox"><span class="rest-warn" style="position:static"></span> <b>مثلث أصفر:</b> راحة أقل من 12 ساعة (ملاحظة لازم تراجعها).</span>
-      <span class="badgebox"><span class="rest-warn red" style="position:static"></span> <b>أحمر ⛔:</b> راحة أقل من 9 ساعات (خطأ لازم يتصلح فوراً).</span>
-      وقف على المثلث لتظهر تفاصيل عدد ساعات الراحة، وعدد التنبيهات ظاهر في صفوف أسفل الجدول لكل يوم.
+      <span class="badgebox"><span class="rest-badge" style="position:static;background:#FFB020;color:#4a3800">!</span> <b>شريط/شارة برتقالية:</b> راحة أقل من 12 ساعة (ملاحظة لازم تراجعها).</span>
+      <span class="badgebox"><span class="rest-badge red" style="position:static">!</span> <b>شريط أحمر ⛔:</b> راحة أقل من 9 ساعات (خطأ لازم يتصلح فوراً).</span>
+      وقف على الشارة لتظهر تفاصيل عدد ساعات الراحة، وعدد التنبيهات ظاهر في صفوف أسفل الجدول لكل يوم.
     </div>
   </div>
 </div>
@@ -542,12 +541,11 @@ function shiftCell(val,ri,ci){
   w.appendChild(dd);
   const warn=restWarnFor(STATE[ri],ci);
   if(warn){
-    const tag=document.createElement("span");tag.className="rest-tag "+(warn.level==="red"?"red":"warn");
-    const h=gapBetween(STATE[ri].shifts[ci-1],val);
-    tag.textContent=(warn.level==="red"?"⛔ ":"⚠️ ")+h+" س راحة";tag.title=warn.label;
-    w.appendChild(tag);
+    const hrs=gapBetween(STATE[ri].shifts[ci-1],val);
+    const bar=document.createElement("span");bar.className="rest-bar "+(warn.level==="red"?"red":"warn");
+    bar.title="راحة "+hrs+" ساعة فقط — "+(warn.level==="red"?"خطير جداً (أقل من 9)":"أقل من 12 ساعة");w.appendChild(bar);
     const badge=document.createElement("span");badge.className="rest-badge "+(warn.level==="red"?"red":"");
-    badge.textContent=warn.level==="red"?"⛔":"⚠";badge.title=warn.label;w.appendChild(badge);
+    badge.textContent="!";badge.title=warn.label+" — الراحة الفعلية "+hrs+" ساعة.";w.appendChild(badge);
   }
   td.appendChild(w);return td;
 }
