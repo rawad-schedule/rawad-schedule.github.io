@@ -78,6 +78,7 @@ thead th.emp{min-width:225px;}
 .cell{border:1px solid var(--line);border-radius:12px;overflow:hidden;height:58px;}
 select.s{width:100%;height:100%;border:0;background:transparent;appearance:none;-webkit-appearance:none;font-family:inherit;font-weight:800;font-size:11.5px;text-align:center;direction:rtl;cursor:pointer;padding:3px 2px;outline:none;}
 select.s.D{color:var(--teal-d);background:var(--teal-soft);}
+select.s.K{color:#1A5FA0;background:#E2EEFB;}
 select.s.A{color:var(--purple-d);background:var(--purple-soft);}
 select.s.B{color:#fff;background:var(--purple-2);}
 select.s.E{color:#fff;background:var(--teal-d);}
@@ -125,6 +126,7 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
 .lg{display:flex;align-items:center;gap:8px;font-size:13px;}
 .sw{width:64px;height:28px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:#fff;}
 .sw.D{background:var(--teal-soft);color:var(--teal-d);border:1px solid var(--teal-line);}
+.sw.K{background:#E2EEFB;color:#1A5FA0;border:1px solid #BCD7F4;}
 .sw.A{background:var(--purple-soft);color:var(--purple-d);border:1px solid #D8D6F0;}
 .sw.B{background:var(--purple-2);} .sw.E{background:var(--teal-d);}
 .sw.C{background:#1F5FA8;}
@@ -234,6 +236,7 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
       <div class="legend">
         <span class="lg"><span class="sw D">8 ص – 4 م</span> صباحي (افتتاح)</span>
         <span class="lg"><span class="sw S">سبليت</span> 9ص–12ظ + 2م–7م (مناوبة مقسومة)</span>
+        <span class="lg"><span class="sw K">9 ص – 5 م</span> صباحي</span>
         <span class="lg"><span class="sw G">10 ص – 6 م</span> صباحي ممتد</span>
         <span class="lg"><span class="sw A">11 ص – 7 م</span> وسط</span>
         <span class="lg"><span class="sw B">1 م – 9 م</span> وسط</span>
@@ -248,7 +251,7 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
 
 <script>
 const DAYS=["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"], DATES=["5 سبتمبر 2026", "6 سبتمبر 2026", "7 سبتمبر 2026", "8 سبتمبر 2026", "9 سبتمبر 2026", "10 سبتمبر 2026", "11 سبتمبر 2026"], SEED=[{"name":"لولوه","br":"جده","f":1,"shifts":["N","O","D","B","B","B","O"]},{"name":"لينا","br":"جده","f":1,"shifts":["A","A","N","O","B","A","O"]},{"name":"فتون","br":"جده","f":1,"shifts":["A","A","A","B","D","N","O"]},{"name":"سماح","br":"طائف","f":1,"shifts":["A","A","A","A","A","B","O"]},{"name":"الهنوف","br":"طائف","f":1,"shifts":["D","B","B","B","B","B","O"]},{"name":"ريم","br":"مصر","f":1,"shifts":["A","A","A","A","A","A","O"]},{"name":"رغد","br":"مصر","f":1,"shifts":["A","A","A","A","A","A","O"]},{"name":"مشاري","br":"جده","f":0,"shifts":["B","O","E","C","E","D","N"]},{"name":"وليد","br":"جده","f":0,"shifts":["E","D","E","N","O","C","C"]},{"name":"شهاب","br":"جده","f":0,"shifts":["E","N","O","D","B","E","O"]},{"name":"خالد","br":"جده","f":0,"shifts":["D","E","E","E","N","O","C"]},{"name":"تركي","br":"طائف","f":0,"shifts":["B","D","D","B","B","B","O"]},{"name":"عبداللطيف","br":"طائف","f":0,"shifts":["B","B","B","D","D","D","O"]},{"name":"احمد حسن","br":"مصر","f":0,"shifts":["B","B","B","B","B","B","O"]},{"name":"طارق","br":"مصر","f":0,"shifts":["B","B","E","B","O","B","B"]},{"name":"عبدالله","br":"مصر","f":0,"shifts":["B","B","B","B","B","B","O"]},{"name":"ابراهيم","br":"مصر","f":0,"shifts":["B","B","B","E","E","B","O"]}];
-const OPTS=[["D","8 ص – 4 م"],["S","سبليت"],["G","10 ص – 6 م"],["A","11 ص – 7 م"],["B","1 م – 9 م"],["E","3 م – 11 م"],["C","4 م – 12 ص"],["N","ليلي 12 ص – 8 ص"],["O","إجازة"]];
+const OPTS=[["D","8 ص – 4 م"],["S","سبليت"],["K","9 ص – 5 م"],["G","10 ص – 6 م"],["A","11 ص – 7 م"],["B","1 م – 9 م"],["E","3 م – 11 م"],["C","4 م – 12 ص"],["N","ليلي 12 ص – 8 ص"],["O","إجازة"]];
 const GIRLS7=["ريم","رغد"];
 const KEY="rawad_24h_v9";
 const SUPA_URL="https://dpfmbcqluhonydvfkhwh.supabase.co";
@@ -316,7 +319,7 @@ function head(){
 function shiftCell(val,ri,ci){
   const td=document.createElement("td");const w=document.createElement("div");w.className="cell";
   const sel=document.createElement("select");sel.className="s "+val;
-  const FULL={D:"8 ص – 4 م",S:"سبليت: 9 ص–12 ظ + 2 م–7 م",G:"10 ص – 6 م",A:"11 ص – 7 م",B:"1 م – 9 م",E:"3 م – 11 م",C:"4 م – 12 ص",N:"ليلي 12 ص – 8 ص",O:"إجازة"};
+  const FULL={D:"8 ص – 4 م",S:"سبليت: 9 ص–12 ظ + 2 م–7 م",K:"9 ص – 5 م",G:"10 ص – 6 م",A:"11 ص – 7 م",B:"1 م – 9 م",E:"3 م – 11 م",C:"4 م – 12 ص",N:"ليلي 12 ص – 8 ص",O:"إجازة"};
   sel.title=FULL[val]||"";
   OPTS.forEach(([v,l])=>{const o=document.createElement("option");o.value=v;o.textContent=l;o.title=FULL[v]||"";if(v===val)o.selected=true;sel.appendChild(o);});
   sel.addEventListener("change",()=>applyShift(ri,ci,sel.value,val,sel));
@@ -508,8 +511,8 @@ function generateRandom(){
   STATE=res;save();closeAll();render();}
 function addRow(){STATE.push({name:"موظف جديد",br:"جده",f:0,shifts:["O","O","O","O","O","O","O"]});save();render();}
 function resetTable(){if(confirm("استرجاع الجدول الأساسي؟")){STATE=SEED.map(r=>({...r,shifts:[...r.shifts]}));save();render();}}
-const LAB={D:"8ص–4م",S:"سبليت 9–12 + 2–7",G:"10ص–6م",A:"11ص–7م",B:"1م–9م",E:"3م–11م",C:"4م–12ص",N:"ليلي 12ص–8ص",O:"إجازة"};
-const XL={D:["#E8F6F4","#0C5160"],S:["#FDEBD8","#C55A11"],G:["#E3F5EA","#1B7A43"],A:["#EFEEF9","#4F4F9E"],B:["#5B5BB0","#FFFFFF"],E:["#0C5160","#FFFFFF"],C:["#1F5FA8","#FFFFFF"],N:["#332C64","#FFFFFF"],O:["#EFF2F4","#64747E"]};
+const LAB={D:"8ص–4م",S:"سبليت 9–12 + 2–7",K:"9ص–5م",G:"10ص–6م",A:"11ص–7م",B:"1م–9م",E:"3م–11م",C:"4م–12ص",N:"ليلي 12ص–8ص",O:"إجازة"};
+const XL={D:["#E8F6F4","#0C5160"],S:["#FDEBD8","#C55A11"],K:["#E2EEFB","#1A5FA0"],G:["#E3F5EA","#1B7A43"],A:["#EFEEF9","#4F4F9E"],B:["#5B5BB0","#FFFFFF"],E:["#0C5160","#FFFFFF"],C:["#1F5FA8","#FFFFFF"],N:["#332C64","#FFFFFF"],O:["#EFF2F4","#64747E"]};
 function exportExcel(){
   const h=c=>String(c).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   const brColor={جده:"#0C5160",طائف:"#6E6EB8",مصر:"#2FB3A6",أوبريشن:"#1B7A43"};
