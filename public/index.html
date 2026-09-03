@@ -61,11 +61,13 @@ thead th.emp{min-width:225px;}
 .badge{font-size:10px;font-weight:800;border-radius:7px;padding:3px 8px;white-space:nowrap;border:1px solid transparent;cursor:pointer;font-family:inherit;}
 .badge.j{background:var(--teal-d);color:#fff;} .badge.t{background:var(--purple);color:#fff;}
 .badge.e{background:#fff;color:var(--teal-d);border:1.5px solid var(--teal);}
+.badge.o{background:#1B7A43;color:#fff;}
 .badge.bk{background:var(--amber-soft);color:var(--amber);border-color:var(--amber);}
 .badge.st{background:#fff;color:var(--gray);border:1px dashed var(--gray2);}
 .brsel{font-size:10px;font-weight:800;border-radius:7px;padding:4px 6px;border:1.5px solid var(--teal);background:#fff;color:var(--teal-d);font-family:inherit;cursor:pointer;direction:rtl;}
 .brsel.طائف{background:var(--purple);color:#fff;border-color:var(--purple);}
 .brsel.جده{background:var(--teal-d);color:#fff;border-color:var(--teal-d);}
+.brsel.أوبريشن{background:#1B7A43;color:#fff;border-color:#1B7A43;}
 .more{background:none;border:0;color:var(--gray2);font-size:19px;cursor:pointer;line-height:1;padding:2px 7px;border-radius:7px;font-weight:800;font-family:inherit;}
 .more:hover{background:var(--off);color:var(--teal-d);}
 .rowmenu{position:absolute;left:6px;top:46px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 34px rgba(0,0,0,.16);z-index:40;min-width:165px;overflow:hidden;display:none;}
@@ -81,6 +83,7 @@ select.s.B{color:#fff;background:var(--purple-2);}
 select.s.E{color:#fff;background:var(--teal-d);}
 select.s.C{color:#fff;background:#1F5FA8;}
 select.s.S{color:#C55A11;background:#FDEBD8;}
+select.s.G{color:#1B7A43;background:#E3F5EA;}
 select.s.N{color:#fff;background:var(--night);}
 select.s.O{color:var(--gray);background:var(--off);font-weight:700;}
 select.s option{color:#1A1A1A;background:#fff;font-weight:700;}
@@ -88,6 +91,7 @@ td.tot{background:var(--teal-soft);color:var(--teal-d);border-radius:12px;font-w
 tfoot th{color:#fff;border-radius:10px;padding:8px 6px;font-size:12px;}
 tfoot tr.tot th{background:var(--teal-d);} tfoot tr.j th{background:var(--teal);}
 tfoot tr.t th{background:var(--purple);} tfoot tr.e th{background:var(--purple-2);}
+tfoot tr.o th{background:#1B7A43;}
 tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
 .cloudline{display:flex;align-items:center;gap:9px;justify-content:center;margin-top:16px;font-size:13px;font-weight:700;color:var(--gray);}
 #cloudDot,#cloudDot2{width:11px;height:11px;border-radius:50%;background:#E0A636;display:inline-block;}
@@ -124,7 +128,8 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
 .sw.A{background:var(--purple-soft);color:var(--purple-d);border:1px solid #D8D6F0;}
 .sw.B{background:var(--purple-2);} .sw.E{background:var(--teal-d);}
 .sw.C{background:#1F5FA8;}
-.sw.S{background:#FDEBD8;color:#C55A11;border:1px solid #F2C49B;} .sw.N{background:var(--night);}
+.sw.S{background:#FDEBD8;color:#C55A11;border:1px solid #F2C49B;}
+.sw.G{background:#E3F5EA;color:#1B7A43;border:1px solid #B7E3C6;} .sw.N{background:var(--night);}
 .sw.O{background:var(--off);color:var(--gray);}
 .badgebox{display:inline-flex;align-items:center;gap:8px;font-size:13px;margin:3px 0;}
 @media(max-width:760px){.cards{grid-template-columns:repeat(2,1fr);} body{padding:12px;} .hero h1{font-size:20px;}}
@@ -169,6 +174,7 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
     <button class="tab" data-v="جده" onclick="setView('جده',this)">🏢 فرع جدة <span class="cnt" id="cntجده">0</span></button>
     <button class="tab" data-v="طائف" onclick="setView('طائف',this)">🏢 فرع الطائف <span class="cnt" id="cntطائف">0</span></button>
     <button class="tab" data-v="مصر" onclick="setView('مصر',this)">📞 مصر كول سنتر <span class="cnt" id="cntمصر">0</span></button>
+    <button class="tab" data-v="أوبريشن" onclick="setView('أوبريشن',this)">⚙️ أوبريشن <span class="cnt" id="cntأوبريشن">0</span></button>
   </div>
 
   <div class="panel">
@@ -222,15 +228,17 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
         <span class="badgebox"><span class="badge j">جده</span> جدة (حتى 12 ص + ليلي)</span>
         <span class="badgebox"><span class="badge t">طائف</span> الطائف (حتى 9 م + ليلي)</span>
         <span class="badgebox"><span class="badge e">مصر</span> كول سنتر فقط</span>
+        <span class="badgebox"><span class="badge o">أوبريشن</span> قسم العمليات</span>
       </div>
       <h4>🎨 مفتاح الشيفتات</h4>
       <div class="legend">
         <span class="lg"><span class="sw D">8 ص – 4 م</span> صباحي (افتتاح)</span>
+        <span class="lg"><span class="sw S">سبليت</span> 9ص–12ظ + 2م–7م (مناوبة مقسومة)</span>
+        <span class="lg"><span class="sw G">10 ص – 6 م</span> صباحي ممتد</span>
         <span class="lg"><span class="sw A">11 ص – 7 م</span> وسط</span>
         <span class="lg"><span class="sw B">1 م – 9 م</span> وسط</span>
         <span class="lg"><span class="sw E">3 م – 11 م</span> إغلاق</span>
         <span class="lg"><span class="sw C">4 م – 12 ص</span> مساء متأخر</span>
-        <span class="lg"><span class="sw S">9–12 ظ + 2–7 م</span> سبليت (مناوبة مقسومة)</span>
         <span class="lg"><span class="sw N">12 ص – 8 ص</span> ليلي</span>
         <span class="lg"><span class="sw O">إ</span> إجازة</span>
       </div>
@@ -240,7 +248,7 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
 
 <script>
 const DAYS=["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"], DATES=["5 سبتمبر 2026", "6 سبتمبر 2026", "7 سبتمبر 2026", "8 سبتمبر 2026", "9 سبتمبر 2026", "10 سبتمبر 2026", "11 سبتمبر 2026"], SEED=[{"name":"لولوه","br":"جده","f":1,"shifts":["N","O","D","B","B","B","O"]},{"name":"لينا","br":"جده","f":1,"shifts":["A","A","N","O","B","A","O"]},{"name":"فتون","br":"جده","f":1,"shifts":["A","A","A","B","D","N","O"]},{"name":"سماح","br":"طائف","f":1,"shifts":["A","A","A","A","A","B","O"]},{"name":"الهنوف","br":"طائف","f":1,"shifts":["D","B","B","B","B","B","O"]},{"name":"ريم","br":"مصر","f":1,"shifts":["A","A","A","A","A","A","O"]},{"name":"رغد","br":"مصر","f":1,"shifts":["A","A","A","A","A","A","O"]},{"name":"مشاري","br":"جده","f":0,"shifts":["B","O","E","C","E","D","N"]},{"name":"وليد","br":"جده","f":0,"shifts":["E","D","E","N","O","C","C"]},{"name":"شهاب","br":"جده","f":0,"shifts":["E","N","O","D","B","E","O"]},{"name":"خالد","br":"جده","f":0,"shifts":["D","E","E","E","N","O","C"]},{"name":"تركي","br":"طائف","f":0,"shifts":["B","D","D","B","B","B","O"]},{"name":"عبداللطيف","br":"طائف","f":0,"shifts":["B","B","B","D","D","D","O"]},{"name":"احمد حسن","br":"مصر","f":0,"shifts":["B","B","B","B","B","B","O"]},{"name":"طارق","br":"مصر","f":0,"shifts":["B","B","E","B","O","B","B"]},{"name":"عبدالله","br":"مصر","f":0,"shifts":["B","B","B","B","B","B","O"]},{"name":"ابراهيم","br":"مصر","f":0,"shifts":["B","B","B","E","E","B","O"]}];
-const OPTS=[["D","8 ص – 4 م"],["A","11 ص – 7 م"],["B","1 م – 9 م"],["E","3 م – 11 م"],["C","4 م – 12 ص"],["S","سبليت 9ص–12ظ + 2–7م"],["N","ليلي 12 ص – 8 ص"],["O","إجازة"]];
+const OPTS=[["D","8 ص – 4 م"],["S","سبليت"],["G","10 ص – 6 م"],["A","11 ص – 7 م"],["B","1 م – 9 م"],["E","3 م – 11 م"],["C","4 م – 12 ص"],["N","ليلي 12 ص – 8 ص"],["O","إجازة"]];
 const GIRLS7=["ريم","رغد"];
 const KEY="rawad_24h_v9";
 const SUPA_URL="https://dpfmbcqluhonydvfkhwh.supabase.co";
@@ -308,7 +316,9 @@ function head(){
 function shiftCell(val,ri,ci){
   const td=document.createElement("td");const w=document.createElement("div");w.className="cell";
   const sel=document.createElement("select");sel.className="s "+val;
-  OPTS.forEach(([v,l])=>{const o=document.createElement("option");o.value=v;o.textContent=l;if(v===val)o.selected=true;sel.appendChild(o);});
+  const FULL={D:"8 ص – 4 م",S:"سبليت: 9 ص–12 ظ + 2 م–7 م",G:"10 ص – 6 م",A:"11 ص – 7 م",B:"1 م – 9 م",E:"3 م – 11 م",C:"4 م – 12 ص",N:"ليلي 12 ص – 8 ص",O:"إجازة"};
+  sel.title=FULL[val]||"";
+  OPTS.forEach(([v,l])=>{const o=document.createElement("option");o.value=v;o.textContent=l;o.title=FULL[v]||"";if(v===val)o.selected=true;sel.appendChild(o);});
   sel.addEventListener("change",()=>applyShift(ri,ci,sel.value,val,sel));
   w.appendChild(sel);td.appendChild(w);return td;
 }
@@ -316,8 +326,8 @@ function applyShift(ri,ci,val,prev,sel){
   STATE[ri].shifts[ci]=val;
   save();render();}
 let VIEW="all";
-const BR_ORDER=["جده","طائف","مصر"];
-const BR_TITLE={جده:"فرع جدة (حتى 12 ص + ليلي)",طائف:"فرع الطائف (حتى 9 م + ليلي)",مصر:"مصر — كول سنتر (بلا ليلي)"};
+const BR_ORDER=["جده","طائف","مصر","أوبريشن"];
+const BR_TITLE={جده:"فرع جدة (حتى 12 ص + ليلي)",طائف:"فرع الطائف (حتى 9 م + ليلي)",مصر:"مصر — كول سنتر (بلا ليلي)",أوبريشن:"قسم الأوبريشن (عمليات)"};
 function viewRows(){
   const idxs=STATE.map((r,i)=>i).filter(i=>VIEW==="all"||STATE[i].br===VIEW);
   if(VIEW==="all")idxs.sort((a,b)=>BR_ORDER.indexOf(STATE[a].br)-BR_ORDER.indexOf(STATE[b].br));
@@ -342,7 +352,7 @@ function render(){
     menu.appendChild(del);
     more.addEventListener("click",e=>{e.stopPropagation();document.querySelectorAll(".rowmenu").forEach(m=>{if(m!==menu)m.classList.remove("open");});menu.classList.toggle("open");});
     const bb=document.createElement("select");bb.className="brsel "+row.br;
-    ["جده","طائف","مصر"].forEach(b=>{const o=document.createElement("option");o.value=b;o.textContent=b;if(b===row.br)o.selected=true;bb.appendChild(o);});
+    ["جده","طائف","مصر","أوبريشن"].forEach(b=>{const o=document.createElement("option");o.value=b;o.textContent=b;if(b===row.br)o.selected=true;bb.appendChild(o);});
     bb.addEventListener("change",()=>{row.br=bb.value;bb.className="brsel "+row.br;save();render();});
     ec.appendChild(span);ec.appendChild(bb);ec.appendChild(more);ec.appendChild(menu);
     nm.appendChild(ec);tr.appendChild(nm);
@@ -366,7 +376,10 @@ function render(){
 function tabsCounts(){
   const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
   set("cntAll",STATE.length);
-  BR_ORDER.forEach(br=>set("cnt"+br,STATE.filter(r=>r.br===br).length));
+  set("cntجده",STATE.filter(r=>r.br==="جده").length);
+  set("cntطائف",STATE.filter(r=>r.br==="طائف").length);
+  set("cntمصر",STATE.filter(r=>r.br==="مصر").length);
+  set("cntأوبريشن",STATE.filter(r=>r.br==="أوبريشن").length);
 }
 function footer(){
   const tf=document.getElementById("tf");tf.innerHTML="";
@@ -378,7 +391,8 @@ function footer(){
   F("","الليلي 12ص–8ص",di=>{const n=STATE.filter(r=>r.shifts[di]==="N").map(r=>r.name);return n.length?n.join("،"):"—";});
   F("j","افتتاح/إغلاق جدة",di=>STATE.filter(r=>r.br==="جده"&&r.shifts[di]!=="O").length);
   F("t","فرع الطائف",di=>STATE.filter(r=>r.br==="طائف"&&r.shifts[di]!=="O").length);
-  F("e","مصر كول سنتر",di=>STATE.filter(r=>r.br==="مصر"&&r.shifts[di]!=="O").length);}
+  F("e","مصر كول سنتر",di=>STATE.filter(r=>r.br==="مصر"&&r.shifts[di]!=="O").length);
+  F("o","أوبريشن",di=>STATE.filter(r=>r.br==="أوبريشن"&&r.shifts[di]!=="O").length);}
 function cards(){
   document.getElementById("cEmp").textContent=STATE.length;
   document.getElementById("cNight").textContent=STATE.reduce((a,r)=>a+r.shifts.filter(v=>v==="N").length,0);
@@ -393,10 +407,10 @@ function validate(S){
   for(const r of S){const work=r.shifts.filter(x=>x!=="O").length;
     if(work<5||work>6)return "أيام العمل غير سليمة";
     for(let i=0;i<7;i++){const x=r.shifts[i];
-      if(x==="N"){if(r.br==="مصر")return "ليلي غير صالح";if(i<6&&r.shifts[i+1]!=="O")return "ليلي بلا إجازة";
+      if(x==="N"){if(r.br==="مصر"||r.br==="أوبريشن")return "ليلي غير صالح";if(i<6&&r.shifts[i+1]!=="O")return "ليلي بلا إجازة";
         if(r.shifts.filter(y=>y==="N").length>1)return "أكثر من ليلي";}
       if(x==="E"&&(r.br==="طائف"||isGirl(r)))return "3–11 غير مسموح";
-      if(x==="C"&&(r.br==="طائف"||isGirl(r)||r.br==="مصر"))return "4–12 غير مسموح (جدة شباب فقط)";
+      if(x==="C"&&(r.br==="طائف"||isGirl(r)||r.br==="مصر"||r.br==="أوبريشن"))return "4–12 غير مسموح (جدة شباب فقط)";
       if(x==="B"&&GIRLS7.includes(r.name))return "ريم/رغد بعد 7";}}
   for(let di=0;di<7;di++){
     if(S.filter(r=>r.shifts[di]==="N").length!==1)return "ليلي واحد يومياً";
@@ -429,7 +443,7 @@ function buildRandom(){
     // 2) الجمعة: البنات إجازة
     S.forEach(r=>{if(isGirl(r))r.shifts[6]="O";});
     const friMales=shuffle(S.filter(r=>!isGirl(r)&&r.shifts[6]===null));
-    friMales.slice(0,3).forEach((r,i)=>{r.shifts[6]=r.br==="طائف"?"B":(r.br==="جده"?pick(["E","C"]):"B");});
+    friMales.slice(0,3).forEach((r,i)=>{r.shifts[6]=r.br==="طائف"||r.br==="مصر"||r.br==="أوبريشن"?"B":pick(["E","C"]);});
     S.forEach(r=>{if(r.shifts[6]===null)r.shifts[6]="O";});
     // 3) كل يوم سبت–خميس
     for(let di=0;di<6;di++){
@@ -448,6 +462,9 @@ function buildRandom(){
       // كول سنتر: واحد على الأقل وسط
       const ec=shuffle(S.filter(r=>r.br==="مصر"&&free(r)))[0];
       if(ec)ec.shifts[di]=pick(["B","E"]);
+      // الأوبريشن: تغطية نهارية
+      const oc=shuffle(S.filter(r=>r.br==="أوبريشن"&&free(r)))[0];
+      if(oc)oc.shifts[di]=isGirl(oc)?"A":"B";
       // الباقي: وسط من كل الفروع
       const rest=shuffle(S.filter(r=>free(r)));
       for(const r of rest){
@@ -457,7 +474,7 @@ function buildRandom(){
         }else{
           if(r.br==="طائف")r.shifts[di]="B";
           else if(r.br==="جده")r.shifts[di]=pick(["B","E","E","C","C"]);
-          else r.shifts[di]="B"; // مصر شاب: وسط 1–9 (بلا إغلاق إضافي)
+          else r.shifts[di]="B"; // مصر / أوبريشن شاب: وسط نهاري
         }
       }
     }
@@ -466,7 +483,7 @@ function buildRandom(){
       for(let i=0;i<6;i++){let v=r.shifts[i];if(v==="O"||v==="N")continue;
         if(r.br==="طائف"&&(v==="E"||v==="C"))v="B";
         if(isGirl(r)&&(v==="E"||v==="C"))v="B";
-        if(r.br==="مصر"&&v==="C")v="B";
+        if((r.br==="مصر"||r.br==="أوبريشن")&&v==="C")v="B";
         if(isGirl(r)&&r.br==="مصر")v="A"; // ريم/رغد وسط 11–7
         if(GIRLS7.includes(r.name)&&v==="B")v="A";
         r.shifts[i]=v;
@@ -491,11 +508,11 @@ function generateRandom(){
   STATE=res;save();closeAll();render();}
 function addRow(){STATE.push({name:"موظف جديد",br:"جده",f:0,shifts:["O","O","O","O","O","O","O"]});save();render();}
 function resetTable(){if(confirm("استرجاع الجدول الأساسي؟")){STATE=SEED.map(r=>({...r,shifts:[...r.shifts]}));save();render();}}
-const LAB={D:"8ص–4م",A:"11ص–7م",B:"1م–9م",E:"3م–11م",C:"4م–12ص",S:"سبليت 9–12 + 2–7",N:"ليلي 12ص–8ص",O:"إجازة"};
-const XL={D:["#E8F6F4","#0C5160"],A:["#EFEEF9","#4F4F9E"],B:["#5B5BB0","#FFFFFF"],E:["#0C5160","#FFFFFF"],C:["#1F5FA8","#FFFFFF"],S:["#FDEBD8","#C55A11"],N:["#332C64","#FFFFFF"],O:["#EFF2F4","#64747E"]};
+const LAB={D:"8ص–4م",S:"سبليت 9–12 + 2–7",G:"10ص–6م",A:"11ص–7م",B:"1م–9م",E:"3م–11م",C:"4م–12ص",N:"ليلي 12ص–8ص",O:"إجازة"};
+const XL={D:["#E8F6F4","#0C5160"],S:["#FDEBD8","#C55A11"],G:["#E3F5EA","#1B7A43"],A:["#EFEEF9","#4F4F9E"],B:["#5B5BB0","#FFFFFF"],E:["#0C5160","#FFFFFF"],C:["#1F5FA8","#FFFFFF"],N:["#332C64","#FFFFFF"],O:["#EFF2F4","#64747E"]};
 function exportExcel(){
   const h=c=>String(c).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-  const brColor={جده:"#0C5160",طائف:"#6E6EB8",مصر:"#2FB3A6"};
+  const brColor={جده:"#0C5160",طائف:"#6E6EB8",مصر:"#2FB3A6",أوبريشن:"#1B7A43"};
   let t='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="UTF-8">'
     +'<style>td,th{mso-number-format:"\\@";font-family:Cairo,Arial,sans-serif;border:1px solid #D8E0E6;}th{font-weight:bold;}</style></head><body dir="rtl">';
   t+='<table border="1" cellspacing="2" cellpadding="6">';
@@ -511,10 +528,10 @@ function exportExcel(){
     r.shifts.forEach(s=>{const[bg,fg]=XL[s];row+='<td style="text-align:center;font-weight:bold;background:'+bg+';color:'+fg+'">'+h(LAB[s])+'</td>';});
     row+='<td style="text-align:center;font-weight:bold;background:#E8F6F4;color:#0C5160">'+(r.shifts.filter(s=>s!=="O").length*8)+' س</td></tr>';
     return row;};
-  ["جده","طائف","مصر"].forEach(br=>{
+  ["جده","طائف","مصر","أوبريشن"].forEach(br=>{
     const g=STATE.filter(r=>r.br===br);
     if(!g.length)return;
-    t+='<tr><td colspan="10" style="background:'+(brColor[br]||"#333")+';color:#fff;font-weight:bold;font-size:13px;text-align:right;padding:7px 10px">'+h({جده:"فرع جدة — حتى منتصف الليل (3–11 و4–12) + ليلي",طائف:"فرع الطائف — حتى 9 مساءً + ليلي",مصر:"مصر — كول سنتر (بلا ليلي)"}[br])+" ("+g.length+" موظف)</td></tr>";
+    t+='<tr><td colspan="10" style="background:'+(brColor[br]||"#333")+';color:#fff;font-weight:bold;font-size:13px;text-align:right;padding:7px 10px">'+h({جده:"فرع جدة — حتى منتصف الليل (3–11 و4–12) + ليلي",طائف:"فرع الطائف — حتى 9 مساءً + ليلي",مصر:"مصر — كول سنتر (بلا ليلي)",أوبريشن:"قسم الأوبريشن (عمليات)"}[br])+" ("+g.length+" موظف)</td></tr>";
     g.forEach(r=>{t+=empRow(r);});
   });
   t+='<tr><td colspan="10"></td></tr>';
@@ -525,6 +542,7 @@ function exportExcel(){
   sum("جدة",di=>STATE.filter(r=>r.br==="جده"&&r.shifts[di]!=="O").length,"#15808F");
   sum("الطائف",di=>STATE.filter(r=>r.br==="طائف"&&r.shifts[di]!=="O").length,"#6E6EB8");
   sum("مصر كول سنتر",di=>STATE.filter(r=>r.br==="مصر"&&r.shifts[di]!=="O").length,"#2FB3A6");
+  sum("أوبريشن",di=>STATE.filter(r=>r.br==="أوبريشن"&&r.shifts[di]!=="O").length,"#1B7A43");
   t+='</table></body></html>';
   const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["﻿"+t],{type:"application/vnd.ms-excel"}));
   a.download="جدول_رواد_النخبة.xls";a.click();}
