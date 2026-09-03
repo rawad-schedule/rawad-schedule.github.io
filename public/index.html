@@ -145,12 +145,22 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
   padding:12px 22px;border-radius:14px;font-weight:800;font-size:13.5px;box-shadow:0 14px 34px rgba(12,81,96,.35);
   opacity:0;visibility:hidden;transition:.3s;z-index:90;}
 #syncToast.show{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
+/* وضع العرض (قفل التعديل) */
+body.locked .nm{background:transparent!important;}
+body.locked .nm,body.locked select.s,body.locked .brsel,body.locked .more,body.locked .tab{cursor:default;}
+body.locked select.s,body.locked .brsel{pointer-events:none;-webkit-appearance:none;appearance:none;}
+body.locked .more{display:none!important;}
+body.locked .admin-only{display:none!important;}
+.readonly-note{display:none;margin:0 0 12px;background:#FDEBD8;border:1px solid #F2C49B;color:#C55A11;
+  border-radius:12px;padding:10px 16px;font-weight:800;font-size:13px;text-align:center;}
+body.locked .readonly-note{display:block;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="topbar">
     <button class="iconbtn" onclick="openMenu()" title="القائمة">☰</button>
+    <button class="iconbtn" id="lockBtn" onclick="adminToggle()" title="صلاحية التعديل">🔒</button>
     <button class="iconbtn" onclick="openInfo()" title="القواعد والمفاتيح">ⓘ</button>
   </div>
 
@@ -170,6 +180,8 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
     <div class="card c3"><div class="n" id="cOpen">—</div><div class="l">افتتاح صباحي للفروع</div></div>
     <div class="card c4"><div class="n" id="cFri">—</div><div class="l">طاقم يوم الجمعة</div></div>
   </div>
+
+  <div class="readonly-note">👁️ أنت في وضع العرض فقط — التعديل محجوب بكود مشرف. اطلب الصلاحية أو اضغط 🔒 بالكود للتعديل.</div>
 
   <div class="tabs" id="tabs">
     <button class="tab active" data-v="all" onclick="setView('all',this)">👥 المجمّع <span class="cnt" id="cntAll">0</span></button>
@@ -197,13 +209,14 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
     <div class="mh"><h3>القائمة</h3><button onclick="closeAll()">✕</button></div>
     <div class="mc">
       <div class="menugrid">
-        <button class="menubtn mb-teal" onclick="addRow();closeAll()"><span class="ico">➕</span> إضافة موظف</button>
-        <button class="menubtn mb-purp" onclick="generateRandom()"><span class="ico">🎲</span> توليد سيكل عشوائي</button>
+        <button class="menubtn mb-teal admin-only" onclick="addRow();closeAll()"><span class="ico">➕</span> إضافة موظف</button>
+        <button class="menubtn mb-purp admin-only" onclick="generateRandom()"><span class="ico">🎲</span> توليد سيكل عشوائي</button>
         <button class="menubtn mb-night" onclick="closeAll();setTimeout(()=>window.print(),120)"><span class="ico">🖨️</span> طباعة / PDF</button>
         <button class="menubtn mb-dark" onclick="exportExcel()"><span class="ico">📊</span> تصدير Excel</button>
         <button class="menubtn mb-purp" onclick="exportJSON()"><span class="ico">💾</span> نسخة احتياطية JSON</button>
-        <button class="menubtn mb-dark" onclick="document.getElementById('fileIn').click()"><span class="ico">📂</span> استيراد نسخة</button>
-        <button class="menubtn mb-ghost" style="grid-column:1/-1" onclick="resetTable()"><span class="ico">↺</span> استرجاع الجدول الأساسي</button>
+        <button class="menubtn mb-dark admin-only" onclick="document.getElementById('fileIn').click()"><span class="ico">📂</span> استيراد نسخة</button>
+        <button class="menubtn mb-ghost admin-only" style="grid-column:1/-1" onclick="resetTable()"><span class="ico">↺</span> استرجاع الجدول الأساسي</button>
+        <button class="menubtn mb-teal" style="grid-column:1/-1" onclick="adminToggle();closeAll()"><span class="ico" id="menuLockIco">🔒</span> <span id="menuLockTxt">دخول المشرف (للتعديل)</span></button>
       </div>
       <input type="file" id="fileIn" accept=".json" style="display:none" onchange="importJSON(event)">
       <div class="cloudcard" style="margin-top:14px"><span id="cloudDot2"></span><span>المزامنة السحابية عبر Supabase — تعديلاتك تُحفظ وتظهر لكل الأجهزة.</span></div>
@@ -253,6 +266,10 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
 const DAYS=["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"], DATES=["5 سبتمبر 2026", "6 سبتمبر 2026", "7 سبتمبر 2026", "8 سبتمبر 2026", "9 سبتمبر 2026", "10 سبتمبر 2026", "11 سبتمبر 2026"], SEED=[{"name":"لولوه","br":"جده","f":1,"shifts":["N","O","D","B","B","B","O"]},{"name":"لينا","br":"جده","f":1,"shifts":["A","A","N","O","B","A","O"]},{"name":"فتون","br":"جده","f":1,"shifts":["A","A","A","B","D","N","O"]},{"name":"سماح","br":"طائف","f":1,"shifts":["A","A","A","A","A","B","O"]},{"name":"الهنوف","br":"طائف","f":1,"shifts":["D","B","B","B","B","B","O"]},{"name":"ريم","br":"مصر","f":1,"shifts":["A","A","A","A","A","A","O"]},{"name":"رغد","br":"مصر","f":1,"shifts":["A","A","A","A","A","A","O"]},{"name":"مشاري","br":"جده","f":0,"shifts":["B","O","E","C","E","D","N"]},{"name":"وليد","br":"جده","f":0,"shifts":["E","D","E","N","O","C","C"]},{"name":"شهاب","br":"جده","f":0,"shifts":["E","N","O","D","B","E","O"]},{"name":"خالد","br":"جده","f":0,"shifts":["D","E","E","E","N","O","C"]},{"name":"تركي","br":"طائف","f":0,"shifts":["B","D","D","B","B","B","O"]},{"name":"عبداللطيف","br":"طائف","f":0,"shifts":["B","B","B","D","D","D","O"]},{"name":"احمد حسن","br":"مصر","f":0,"shifts":["B","B","B","B","B","B","O"]},{"name":"طارق","br":"مصر","f":0,"shifts":["B","B","E","B","O","B","B"]},{"name":"عبدالله","br":"مصر","f":0,"shifts":["B","B","B","B","B","B","O"]},{"name":"ابراهيم","br":"مصر","f":0,"shifts":["B","B","B","E","E","B","O"]}];
 const OPTS=[["D","8 ص – 4 م"],["S","سبليت"],["K","9 ص – 5 م"],["G","10 ص – 6 م"],["A","11 ص – 7 م"],["B","1 م – 9 م"],["E","3 م – 11 م"],["C","4 م – 12 ص"],["N","ليلي 12 ص – 8 ص"],["O","إجازة"]];
 const GIRLS7=["ريم","رغد"];
+const ADMIN_PIN="2026";
+const ADMIN_KEY="rawad_admin_v1";
+let isAdmin=false;
+try{isAdmin=sessionStorage.getItem(ADMIN_KEY)==="1";}catch(e){}
 const KEY="rawad_24h_v9";
 const SUPA_URL="https://dpfmbcqluhonydvfkhwh.supabase.co";
 const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRwZm1iY3FsdWhvbnlkdmZraHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcyNzIzNDgsImV4cCI6MjEwMjg0ODM0OH0.w4k0bgjF2rkhLDzr4-XBbxTA6KqQe-JNpXK7UzrBB4M";
@@ -278,7 +295,7 @@ async function pushCloud(){
     cloudOK=r.ok;if(r.ok){cloudSig=payload;dirty=false;}setDot(r.ok);
   }catch(e){setDot(false);}finally{pushing=false;}}
 let pushTimer=null;
-function save(){dirty=true;clearTimeout(pushTimer);pushTimer=setTimeout(pushCloud,450);}
+function save(){if(!isAdmin)return;dirty=true;clearTimeout(pushTimer);pushTimer=setTimeout(pushCloud,450);}
 function setDot(ok){cloudOK=ok;["cloudDot","cloudDot2"].forEach(id=>{const el=document.getElementById(id);if(el)el.style.background=ok?"#2FB3A6":"#E0A636";});
   const t=document.getElementById("cloudTxt");if(t)t.textContent=ok?"متصل ومتزامن — تعديلاتك وتعديلات الفريق تظهر فوراً لكل الأجهزة":"يعمل بالحفظ المحلي مؤقتاً (سيتزامن عند عودة الاتصال).";}
 let toastTimer=null;
@@ -326,6 +343,7 @@ function shiftCell(val,ri,ci){
   w.appendChild(sel);td.appendChild(w);return td;
 }
 function applyShift(ri,ci,val,prev,sel){
+  if(!isAdmin){if(sel)sel.value=prev;return;}
   STATE[ri].shifts[ci]=val;
   save();render();}
 let VIEW="all";
@@ -341,22 +359,23 @@ function setView(v,btn){VIEW=v;document.querySelectorAll(".tab").forEach(t=>t.cl
 window.addEventListener("beforeprint",()=>{if(VIEW!=="all"){VIEW="all";render();}});
 window.addEventListener("afterprint",()=>{render();});
 function render(){
+  applyLock();
   head();const tb=document.getElementById("tb");tb.innerHTML="";
   const idxs=viewRows();
   const rowHtml=ri=>{const row=STATE[ri];
     const tr=document.createElement("tr");
     const nm=document.createElement("td");const ec=document.createElement("div");ec.className="empcell";
-    const span=document.createElement("span");span.className="nm";span.contentEditable="true";span.textContent=row.name;
+    const span=document.createElement("span");span.className="nm";span.contentEditable=isAdmin?"true":"false";span.textContent=row.name;
     span.addEventListener("blur",()=>{row.name=span.textContent.trim()||"بدون اسم";save();});
     const more=document.createElement("button");more.className="more";more.textContent="⋮";
     const menu=document.createElement("div");menu.className="rowmenu";
     const del=document.createElement("button");del.className="danger";del.textContent="🗑 حذف الموظف";
-    del.onclick=e=>{e.stopPropagation();if(confirm("حذف "+row.name+"؟")){STATE.splice(ri,1);save();render();}};
+    del.onclick=e=>{e.stopPropagation();if(!isAdmin){alert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}if(confirm("حذف "+row.name+"؟")){STATE.splice(ri,1);save();render();}};
     menu.appendChild(del);
     more.addEventListener("click",e=>{e.stopPropagation();document.querySelectorAll(".rowmenu").forEach(m=>{if(m!==menu)m.classList.remove("open");});menu.classList.toggle("open");});
     const bb=document.createElement("select");bb.className="brsel "+row.br;
     ["جده","طائف","مصر","أوبريشن"].forEach(b=>{const o=document.createElement("option");o.value=b;o.textContent=b;if(b===row.br)o.selected=true;bb.appendChild(o);});
-    bb.addEventListener("change",()=>{row.br=bb.value;bb.className="brsel "+row.br;save();render();});
+    bb.addEventListener("change",()=>{if(!isAdmin){bb.value=row.br;alert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}row.br=bb.value;bb.className="brsel "+row.br;save();render();});
     ec.appendChild(span);ec.appendChild(bb);ec.appendChild(more);ec.appendChild(menu);
     nm.appendChild(ec);tr.appendChild(nm);
     row.shifts.forEach((v,ci)=>tr.appendChild(shiftCell(v,ri,ci)));
@@ -506,11 +525,12 @@ function buildRandom(){
   }
   return null;}
 function generateRandom(){
+  if(!isAdmin){alert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}
   if(!confirm("توليد سيكل جديد بالقواعد (صباحي واحد لكل فرع + ليلي واحد)؟"))return;
   const res=buildRandom();if(!res){alert("تعذّر التوليد — جرّب مرة أخرى.");return;}
   STATE=res;save();closeAll();render();}
-function addRow(){STATE.push({name:"موظف جديد",br:"جده",f:0,shifts:["O","O","O","O","O","O","O"]});save();render();}
-function resetTable(){if(confirm("استرجاع الجدول الأساسي؟")){STATE=SEED.map(r=>({...r,shifts:[...r.shifts]}));save();render();}}
+function addRow(){if(!isAdmin){alert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}STATE.push({name:"موظف جديد",br:"جده",f:0,shifts:["O","O","O","O","O","O","O"]});save();render();}
+function resetTable(){if(!isAdmin){alert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}if(confirm("استرجاع الجدول الأساسي؟")){STATE=SEED.map(r=>({...r,shifts:[...r.shifts]}));save();render();}}
 const LAB={D:"8ص–4م",S:"سبليت 9–12 + 2–7",K:"9ص–5م",G:"10ص–6م",A:"11ص–7م",B:"1م–9م",E:"3م–11م",C:"4م–12ص",N:"ليلي 12ص–8ص",O:"إجازة"};
 const XL={D:["#E8F6F4","#0C5160"],S:["#FDEBD8","#C55A11"],K:["#E2EEFB","#1A5FA0"],G:["#E3F5EA","#1B7A43"],A:["#EFEEF9","#4F4F9E"],B:["#5B5BB0","#FFFFFF"],E:["#0C5160","#FFFFFF"],C:["#1F5FA8","#FFFFFF"],N:["#332C64","#FFFFFF"],O:["#EFF2F4","#64747E"]};
 function exportExcel(){
@@ -551,10 +571,29 @@ function exportExcel(){
   a.download="جدول_رواد_النخبة.xls";a.click();}
 function exportJSON(){const b=new Blob([JSON.stringify(STATE,null,2)],{type:"application/json"});
   const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="رواد_النخبة_نسخة.json";a.click();}
-function importJSON(ev){const f=ev.target.files[0];if(!f)return;const rd=new FileReader();
+function importJSON(ev){if(!isAdmin){ev.target.value="";alert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}const f=ev.target.files[0];if(!f)return;const rd=new FileReader();
   rd.onload=()=>{try{const d=JSON.parse(rd.result);if(Array.isArray(d)){STATE=d;save();render();closeAll();alert("تم الاستيراد.");}else alert("ملف غير صالح.");}catch(e){alert("تعذر القراءة.");}};
   rd.readAsText(f);ev.target.value="";}
+/* ============ صلاحيات المشرف / العرض ============ */
+function applyLock(){
+  document.body.classList.toggle("locked",!isAdmin);
+  document.querySelectorAll(".hero [contenteditable]").forEach(el=>el.setAttribute("contenteditable",isAdmin?"true":"false"));
+  const lb=document.getElementById("lockBtn");if(lb)lb.textContent=isAdmin?"🔓":"🔒";
+  const mt=document.getElementById("menuLockTxt");if(mt)mt.textContent=isAdmin?"قفل التعديل (خروج المشرف)":"دخول المشرف (للتعديل)";
+  const mi=document.getElementById("menuLockIco");if(mi)mi.textContent=isAdmin?"🔓":"🔒";
+}
+function adminToggle(){
+  if(isAdmin){
+    if(confirm("إغلاق وضع التعديل والعودة للعرض فقط؟")){isAdmin=false;try{sessionStorage.removeItem(ADMIN_KEY);}catch(e){}applyLock();render();}
+    return;}
+  const v=prompt("أدخل كود المشرف لتفعيل التعديل:","");
+  if(v===null)return;
+  if(v.trim()===ADMIN_PIN){isAdmin=true;try{sessionStorage.setItem(ADMIN_KEY,"1");}catch(e){}applyLock();render();alert("✅ تم تفعيل وضع المشرف — يمكنك التعديل الآن.");}
+  else alert("❌ كود غير صحيح. التعديل يظل مقفولاً.");
+}
+
 /* بدء التشغيل: اعرض المحلي فوراً ثم اجلب السحابة (المرجع الموحّد) */
+applyLock();
 render();pullCloud(false);</script>
 </body>
 </html>
