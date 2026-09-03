@@ -132,6 +132,10 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
 .menugrid{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
 .menugrid .menubtn{justify-content:flex-start;padding:15px 14px;}
 @media(max-width:560px){.menugrid{grid-template-columns:1fr;}}
+#syncToast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--teal-d);color:#fff;
+  padding:12px 22px;border-radius:14px;font-weight:800;font-size:13.5px;box-shadow:0 14px 34px rgba(12,81,96,.35);
+  opacity:0;visibility:hidden;transition:.3s;z-index:90;}
+#syncToast.show{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
@@ -175,6 +179,7 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
 
   <div class="cloudline"><span id="cloudDot"></span><span id="cloudTxt">جارٍ الاتصال بقاعدة البيانات السحابية…</span></div>
 </div>
+<div id="syncToast">🔄 تم تحديث الجدول بتعديلات جديدة من الأجهزة الأخرى</div>
 
 <div class="overlay" id="overlay" onclick="closeAll()"></div>
 <div class="modal" id="menuModal">
@@ -237,17 +242,53 @@ const KEY="rawad_24h_v9";
 const SUPA_URL="https://dpfmbcqluhonydvfkhwh.supabase.co";
 const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRwZm1iY3FsdWhvbnlkdmZraHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcyNzIzNDgsImV4cCI6MjEwMjg0ODM0OH0.w4k0bgjF2rkhLDzr4-XBbxTA6KqQe-JNpXK7UzrBB4M";
 const SUPA_HDR={"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"application/json"};
-let cloudOK=false;
-let STATE=load();
-function load(){try{const s=localStorage.getItem(KEY);if(s)return JSON.parse(s);}catch(e){}return SEED.map(r=>({...r,shifts:[...r.shifts]}));}
+/* ============ المزامنة: السحابة مصدر موحّد لكل الأجهزة ============ */
+let STATE=loadLocal(), cloudOK=false, dirty=false, pushing=false, cloudSig=null;
+function norm(d){return (Array.isArray(d)?d:[]).map(r=>({name:r.name||"بدون اسم",br:r.br||"جده",f:r.f?1:0,shifts:Array.isArray(r.shifts)&&r.shifts.length===7?r.shifts:["O","O","O","O","O","O","O"]}));}
+function sig(d){return JSON.stringify(norm(d));}
+function loadLocal(){try{const s=localStorage.getItem(KEY);if(s){const d=JSON.parse(s);if(Array.isArray(d)&&d.length)return norm(d);}}catch(e){}return SEED.map(r=>({...r,shifts:[...r.shifts]}));}
 function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(STATE));}catch(e){}}
-let saveTimer=null;
-function save(){saveLocal();clearTimeout(saveTimer);saveTimer=setTimeout(async()=>{
-  try{const h=Object.assign({},SUPA_HDR,{"Prefer":"resolution=merge-duplicates,return=minimal"});
+/* هل المستخدم مشغول بتعديل الآن؟ (لا نقاطع أثناء الكتابة/فتح القوائم) */
+function userBusy(){
+  const a=document.activeElement;
+  if(a&&(a.tagName==="SELECT"||a.tagName==="INPUT"||a.isContentEditable))return true;
+  if(document.querySelector(".rowmenu.open,.modal.open"))return true;
+  return false;}
+async function pushCloud(){
+  saveLocal();
+  if(pushing)return;pushing=true;
+  try{const payload=sig(STATE);
+    const h=Object.assign({},SUPA_HDR,{"Prefer":"resolution=merge-duplicates,return=minimal"});
     const r=await fetch(SUPA_URL+"/rest/v1/schedule",{method:"POST",headers:h,body:JSON.stringify({id:1,data:STATE,updated_at:new Date().toISOString()})});
-    cloudOK=r.ok;setDot(r.ok);}catch(e){setDot(false);}},400);}
-function setDot(ok){["cloudDot","cloudDot2"].forEach(id=>{const el=document.getElementById(id);if(el)el.style.background=ok?"#2FB3A6":"#E0A636";});
-  const t=document.getElementById("cloudTxt");if(t)t.textContent=ok?"متصل بقاعدة البيانات — التعديلات محفوظة سحابياً لكل الأجهزة":"يعمل بالحفظ المحلي مؤقتاً (تحقق من الاتصال).";}
+    cloudOK=r.ok;if(r.ok){cloudSig=payload;dirty=false;}setDot(r.ok);
+  }catch(e){setDot(false);}finally{pushing=false;}}
+let pushTimer=null;
+function save(){dirty=true;clearTimeout(pushTimer);pushTimer=setTimeout(pushCloud,450);}
+function setDot(ok){cloudOK=ok;["cloudDot","cloudDot2"].forEach(id=>{const el=document.getElementById(id);if(el)el.style.background=ok?"#2FB3A6":"#E0A636";});
+  const t=document.getElementById("cloudTxt");if(t)t.textContent=ok?"متصل ومتزامن — تعديلاتك وتعديلات الفريق تظهر فوراً لكل الأجهزة":"يعمل بالحفظ المحلي مؤقتاً (سيتزامن عند عودة الاتصال).";}
+let toastTimer=null;
+function showToast(){const el=document.getElementById("syncToast");if(!el)return;el.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),3500);}
+async function pullCloud(announce){
+  if(pushing||userBusy())return;
+  try{const r=await fetch(SUPA_URL+"/rest/v1/schedule?id=eq.1&select=data,updated_at",{headers:SUPA_HDR,cache:"no-store"});
+    if(!r.ok){setDot(false);return;}
+    const rows=await r.json();
+    let data=rows&&rows.length&&Array.isArray(rows[0].data)&&rows[0].data.length?norm(rows[0].data):null;
+    setDot(true);
+    if(!data){ // السحابة فاضية — ادفع الحالي أول مرة فقط
+      if(!cloudSig){await pushCloud();}
+      return;}
+    const s=sig(data);
+    if(cloudSig===null){ // أول تحميل: السحابة هي المرجع دائماً
+      cloudSig=s;STATE=data;saveLocal();render();return;}
+    if(s!==cloudSig&&!dirty){ // تغيير من جهاز آخر (ليس تعديلاً محلياً غير مرفوع)
+      const changed=s!==sig(STATE);
+      cloudSig=s;STATE=data;saveLocal();
+      if(changed){render();if(announce)showToast();}}
+  }catch(e){setDot(false);}}
+setInterval(()=>pullCloud(true),12000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)pullCloud(true);});
+window.addEventListener("focus",()=>pullCloud(true));
 function openMenu(){document.getElementById("menuModal").classList.add("open");document.getElementById("overlay").classList.add("open");}
 function openInfo(){document.getElementById("infoModal").classList.add("open");document.getElementById("overlay").classList.add("open");}
 function closeAll(){["drawer","menuModal","infoModal"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove("open");});
@@ -488,22 +529,7 @@ function exportJSON(){const b=new Blob([JSON.stringify(STATE,null,2)],{type:"app
 function importJSON(ev){const f=ev.target.files[0];if(!f)return;const rd=new FileReader();
   rd.onload=()=>{try{const d=JSON.parse(rd.result);if(Array.isArray(d)){STATE=d;save();render();closeAll();alert("تم الاستيراد.");}else alert("ملف غير صالح.");}catch(e){alert("تعذر القراءة.");}};
   rd.readAsText(f);ev.target.value="";}
-async function loadCloud(){
-  const norm=d=>d.map(r=>({name:r.name,br:r.br,f:r.f?1:0,shifts:r.shifts||["O","O","O","O","O","O","O"]}));
-  let local=null;try{const s=localStorage.getItem(KEY);if(s)local=JSON.parse(s);}catch(e){}
-  try{const r=await fetch(SUPA_URL+"/rest/v1/schedule?id=eq.1&select=data",{headers:SUPA_HDR,cache:"no-store"});
-    if(r.ok){const rows=await r.json();const cloud=rows&&rows.length&&Array.isArray(rows[0].data)&&rows[0].data.length?norm(rows[0].data):null;
-      if(local&&Array.isArray(local)&&local.length){STATE=norm(local);render();}
-      else if(cloud){STATE=cloud;saveLocal();render();}
-      else{const g=buildRandom()?norm(buildRandom()):norm(SEED.map(x=>({...x,shifts:[...x.shifts]})));STATE=g;saveLocal();render();
-        const h=Object.assign({},SUPA_HDR,{"Prefer":"resolution=merge-duplicates,return=minimal"});
-        await fetch(SUPA_URL+"/rest/v1/schedule",{method:"POST",headers:h,body:JSON.stringify({id:1,data:STATE})});}
-      // إذا كانت النسخة المحلية أحدث (عدّل المستخدم للتو)، ادفعها للسحابة
-      if(local&&cloud&&JSON.stringify(norm(local))!==JSON.stringify(cloud)){
-        const h=Object.assign({},SUPA_HDR,{"Prefer":"resolution=merge-duplicates,return=minimal"});
-        fetch(SUPA_URL+"/rest/v1/schedule",{method:"POST",headers:h,body:JSON.stringify({id:1,data:STATE,updated_at:new Date().toISOString()})});}
-      setDot(true);}else{if(local){STATE=norm(local);render();}setDot(false);}
-  }catch(e){if(local){STATE=norm(local);render();}setDot(false);}}
-render();loadCloud();</script>
+/* بدء التشغيل: اعرض المحلي فوراً ثم اجلب السحابة (المرجع الموحّد) */
+render();pullCloud(false);</script>
 </body>
 </html>
