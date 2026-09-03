@@ -177,41 +177,31 @@ body.locked .readonly-note{display:block;}
 .dd-btn.مصر{background:#fff;color:var(--teal-d);border-color:var(--teal);}
 .dd-btn.أوبريشن{background:#1B7A43;color:#fff;border-color:#1B7A43;}
 
-/* ===== مشاهد الشيفتات المرسومة (مربعات مصمّمة) ===== */
-.dd-btn{position:relative;flex-direction:column;gap:1px;padding:6px 4px 4px;border-radius:10px;font-size:10px;font-weight:800;overflow:hidden;}
-.dd-btn .tm{font-size:9.5px;font-weight:800;line-height:1.1;z-index:2;position:relative;}
-.dd-btn .ar{display:none;}
-.scene{position:absolute;inset:0;z-index:1;pointer-events:none;}
-.scene i{position:absolute;pointer-events:none;}
-/* شمس الصباح */
-.morning .sun{width:15px;height:15px;border-radius:50%;background:#FFD24A;top:6px;right:8px;
-  box-shadow:0 0 0 3px rgba(255,210,74,.35);}
-.morning{background:linear-gradient(180deg,#BFE9FF 0%,#E8F7FF 58%,#F4FBF2 100%);color:#0B5394;}
-.morning.K{background:linear-gradient(180deg,#CDEBFF,#EAF6FF 60%,#EAF7EF);}
-.morning.G{background:linear-gradient(180deg,#C8F0D8,#E9F9EE 60%,#F3FBF4);color:#1B7A43;}
-/* الغروب (وسط) */
-.sunset{background:linear-gradient(180deg,#7E57C2 0%,#B98BC9 34%,#F4A261 66%,#FCD9A0 100%);color:#fff;text-shadow:0 1px 2px rgba(90,40,10,.45);}
-.sunset .sun{width:16px;height:16px;border-radius:50%;background:#FF7A3D;top:13px;right:10px;
-  box-shadow:0 0 0 4px rgba(255,122,61,.3);}
-.sunset .hzn{position:absolute;left:0;right:0;bottom:15px;height:2px;background:rgba(255,255,255,.5);}
-/* مساء متأخر 4–12 */
-.dusk{background:linear-gradient(180deg,#1450B0 0%,#2E6FCB 55%,#6A4FB0 100%);color:#fff;}
-/* إغلاق 3–11 */
-.darkteal{background:linear-gradient(180deg,#0C5160 0%,#15707F 60%,#2FB3A6 100%);color:#fff;}
-/* وسط بنفسجي 1–9 */
-.purp{background:linear-gradient(180deg,#4F4F9E 0%,#6E6EB8 60%,#9B9BD6 100%);color:#fff;}
-/* ليلي: قمر ونجوم */
-.night{background:linear-gradient(180deg,#1B1640 0%,#332C64 60%,#4A4188 100%);color:#fff;}
-.moon{width:13px;height:13px;border-radius:50%;background:#F4F1E4;top:6px;right:8px;position:absolute;
-  box-shadow:inset -4px -1px 0 0 rgba(27,22,64,.55);}
-.star{width:3px;height:3px;border-radius:50%;background:#fff;position:absolute;box-shadow:-10px 6px 0 rgba(255,255,255,.85),6px 9px 0 rgba(255,255,255,.7);top:8px;right:20px;}
-/* سبليت: نصفان */
-.split{background:linear-gradient(115deg,#BFE9FF 0%,#BFE9FF 47%,#F4A261 53%,#FCD9A0 100%);color:#7A4B12;}
-.split .half-s{width:11px;height:11px;border-radius:50%;background:#FFD24A;top:6px;right:9px;}
-.split .half-m{width:11px;height:11px;border-radius:50%;background:#FF7A3D;bottom:7px;right:9px;opacity:.9;}
+/* ===== بطاقات الشيفتات الاحترافية ===== */
+.dd-btn{position:relative;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:5px 6px;
+  border-radius:10px;font-family:inherit;border:0;overflow:hidden;min-height:50px;}
+.s-ico{position:absolute;top:4px;right:6px;font-size:11px;line-height:1;opacity:.95;z-index:1;}
+.s-lb{font-size:8.5px;font-weight:700;opacity:.72;letter-spacing:.2px;line-height:1;z-index:2;}
+.s-tm{font-size:12.5px;font-weight:800;line-height:1.25;z-index:2;white-space:nowrap;}
+.s-tm.two{font-size:9.5px;font-weight:800;line-height:1.35;white-space:normal;}
+/* صباحي */
+.m-d{background:linear-gradient(180deg,#DDF1EE,#C7E8E3);color:#0C5160;}
+.m-k{background:linear-gradient(180deg,#DCECFB,#C4DEF5);color:#15508F;}
+.m-g{background:linear-gradient(180deg,#DCF3E4,#C6E9D2);color:#16703C;}
+/* وسط */
+.m-a{background:linear-gradient(180deg,#E9E7F9,#D8D5F2);color:#433C8C;}
+.m-b{background:linear-gradient(180deg,#6E6EBE,#5A5AB0);color:#fff;}
+.m-b .s-lb{opacity:.85;}
+/* إغلاق / مساء / ليلي */
+.m-e{background:linear-gradient(180deg,#12707F,#0C5160);color:#fff;}
+.m-c{background:linear-gradient(180deg,#2E6FCB,#1F5AA8);color:#fff;}
+.m-n{background:linear-gradient(180deg,#3A3275,#241F52);color:#fff;}
+.m-e .s-lb,.m-c .s-lb,.m-n .s-lb{opacity:.82;}
+/* سبليت */
+.m-s{background:linear-gradient(180deg,#FDEBD8,#FAD9B8);color:#9C4A10;}
 /* إجازة */
-.off{background:repeating-linear-gradient(45deg,#EEF2F4,#EEF2F4 6px,#E4EAEE 6px,#E4EAEE 12px);color:var(--gray);}
-.off .zz{position:absolute;top:5px;left:6px;font-size:10px;font-weight:800;color:#9AA6AE;font-style:italic;}
+.m-o{background:#EFF2F4;color:#8A979F;}
+.m-o .s-tm{font-size:11px;font-weight:800;}
 
 /* ===== شريط تحذير الراحة (داخل المربع، واضح غير متداخل) ===== */
 .rest-tag{position:absolute;left:0;right:0;bottom:0;z-index:5;font-size:8.5px;font-weight:800;text-align:center;
@@ -509,22 +499,25 @@ function makeDropdown(options,current,onPick,opt){
   return wrap;
 }
 
-/* مشاهد الشيفتات: الأصناف والمحتوى المرسوم */
-const SHIFT_SCENE={
-  D:{cls:"morning",time:"8ص–4م"},K:{cls:"morning K",time:"9ص–5م"},G:{cls:"morning G",time:"10ص–6م"},
-  A:{cls:"sunset",time:"11ص–7م"},B:{cls:"sunset",time:"1م–9م"},
-  E:{cls:"darkteal",time:"3م–11م"},C:{cls:"dusk",time:"4م–12ص"},S:{cls:"split",time:"سبليت"},
-  N:{cls:"night",time:"ليلي"},O:{cls:"off",time:"إجازة"}
+/* بيانات عرض كل شيفت: صنف الخلفية، التصنيف، التوقيت الواضح، الأيقونة */
+const SHIFT_META={
+  D:{cls:"m-d",lb:"صباحي",tm:"8 ص – 4 م",ico:"☀️"},
+  K:{cls:"m-k",lb:"صباحي",tm:"9 ص – 5 م",ico:"🌤️"},
+  G:{cls:"m-g",lb:"صباحي",tm:"10 ص – 6 م",ico:"🌤️"},
+  A:{cls:"m-a",lb:"وسط",tm:"11 ص – 7 م",ico:"⛅"},
+  B:{cls:"m-b",lb:"مساء",tm:"1 م – 9 م",ico:"🌇"},
+  E:{cls:"m-e",lb:"إغلاق",tm:"3 م – 11 م",ico:"🌃"},
+  C:{cls:"m-c",lb:"مسائي",tm:"4 م – 12 ص",ico:"🌙"},
+  N:{cls:"m-n",lb:"ليلي",tm:"12 ص – 8 ص",ico:"🌙"},
+  S:{cls:"m-s",lb:"سبليت",tm:"9–12 · 2–7",two:true,ico:"🔀"},
+  O:{cls:"m-o",lb:"إجازة",tm:"إجازة",ico:"💤"}
 };
-function sceneInner(code){
-  const s=SHIFT_SCENE[code];if(!s)return '<span class="tm">'+code+'</span>';
-  let art="";
-  if(s.cls.indexOf("morning")===0)art='<span class="scene"><i class="sun"></i></span>';
-  else if(s.cls==="sunset")art='<span class="scene"><i class="hzn"></i><i class="sun"></i></span>';
-  else if(s.cls==="night"||s.cls==="darkteal"||s.cls==="dusk"||s.cls==="purp")art='<span class="scene"><i class="star"></i><i class="moon"></i></span>';
-  else if(s.cls==="split")art='<span class="scene"><i class="half-s"></i><i class="half-m"></i></span>';
-  else if(s.cls==="off")art='<span class="scene"><i class="zz">z</i></span>';
-  return art+'<span class="tm">'+s.time+'</span>';
+function shiftInner(code){
+  const m=SHIFT_META[code];
+  if(!m)return '<span class="s-lb">'+code+'</span>';
+  return '<span class="s-ico">'+m.ico+'</span>'
+    +'<span class="s-lb">'+m.lb+'</span>'
+    +'<span class="s-tm'+(m.two?" two":"")+'">'+m.tm+'</span>';
 }
 function head(){
   const tr=document.getElementById("headRow");tr.innerHTML="";
@@ -538,8 +531,8 @@ function shiftCell(val,ri,ci){
   const dd=makeDropdown(OPTS,val,(nv)=>applyShift(ri,ci,nv,val),{
     lockBtn:!isAdmin,
     title:o=>FULL[o[0]]||o[1],
-    btnCls:code=>SHIFT_SCENE[code]?SHIFT_SCENE[code].cls:"",
-    btnHtml:code=>sceneInner(code)
+    btnCls:code=>SHIFT_META[code]?SHIFT_META[code].cls:"",
+    btnHtml:code=>shiftInner(code)
   });
   w.appendChild(dd);
   const warn=restWarnFor(STATE[ri],ci);
