@@ -241,10 +241,23 @@ body.locked .readonly-note{display:block;}
 .m-o{background:linear-gradient(180deg,#D6DEE4 0%,#BECAD2 100%);color:#46585F;}
 .m-o .s-lb{opacity:.8;}
 
-/* ===== تحذير الراحة: شريط رفيع تحت المربع (لا يكسر تناسق الأبعاد) ===== */
-.rest-bar{position:absolute;left:0;right:0;bottom:0;height:6px;z-index:6;pointer-events:none;border-radius:0 0 11px 11px;cursor:help;}
-.rest-bar.warn{background:linear-gradient(90deg,#FFB020,#FFC73A);}
-.rest-bar.red{background:linear-gradient(90deg,#E23B3B,#F05545);}
+/* ===== تحذير الراحة: إطار أحمر/أصفر واضح + شريط سفني بارز (داخل المربع، نفس الأبعاد) ===== */
+.rest-bar{position:absolute;left:0;right:0;bottom:0;height:8px;z-index:6;pointer-events:none;
+  border-radius:0 0 11px 11px;cursor:help;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.rest-bar.warn{background:linear-gradient(90deg,#F5A623,#FFC53D);}
+.rest-bar.red{background:linear-gradient(90deg,#D62828,#F05545);}
+/* إطار ملزم للبطاقة نفسها لتظهر التحذيرات فوراً */
+.cell .dd-btn{transition:box-shadow .15s;}
+.cell:has(.rest-bar.warn) .dd-btn{box-shadow:inset 0 0 0 2.5px #F5A623, 0 4px 12px rgba(245,166,35,.35);
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.cell:has(.rest-bar.red) .dd-btn{box-shadow:inset 0 0 0 3px #E23B3B, 0 4px 14px rgba(226,59,59,.42);
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.cell:has(.rest-bar.red)::after,.cell:has(.rest-bar.warn)::after{
+  content:"⚠";position:absolute;top:3px;left:6px;z-index:7;font-size:11px;line-height:1;pointer-events:none;
+  text-shadow:0 1px 2px rgba(0,0,0,.25);}
+.cell:has(.rest-bar.red)::after{color:#FF5A4D;}
+.cell:has(.rest-bar.warn)::after{color:#E8930C;}
 
 /* ===== نوافذ تنبيه/تأكيد/إدخال مخصصة ===== */
 .dlgbox{max-width:440px;}
