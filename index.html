@@ -80,6 +80,7 @@ select.s.A{color:var(--purple-d);background:var(--purple-soft);}
 select.s.B{color:#fff;background:var(--purple-2);}
 select.s.E{color:#fff;background:var(--teal-d);}
 select.s.C{color:#fff;background:#1F5FA8;}
+select.s.S{color:#C55A11;background:#FDEBD8;}
 select.s.N{color:#fff;background:var(--night);}
 select.s.O{color:var(--gray);background:var(--off);font-weight:700;}
 select.s option{color:#1A1A1A;background:#fff;font-weight:700;}
@@ -122,7 +123,8 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
 .sw.D{background:var(--teal-soft);color:var(--teal-d);border:1px solid var(--teal-line);}
 .sw.A{background:var(--purple-soft);color:var(--purple-d);border:1px solid #D8D6F0;}
 .sw.B{background:var(--purple-2);} .sw.E{background:var(--teal-d);}
-.sw.C{background:#1F5FA8;} .sw.N{background:var(--night);}
+.sw.C{background:#1F5FA8;}
+.sw.S{background:#FDEBD8;color:#C55A11;border:1px solid #F2C49B;} .sw.N{background:var(--night);}
 .sw.O{background:var(--off);color:var(--gray);}
 .badgebox{display:inline-flex;align-items:center;gap:8px;font-size:13px;margin:3px 0;}
 @media(max-width:760px){.cards{grid-template-columns:repeat(2,1fr);} body{padding:12px;} .hero h1{font-size:20px;}}
@@ -211,6 +213,7 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
       • <b>الافتتاح الصباحي (8ص–4م):</b> موظف واحد فقط من جدة + موظف واحد فقط من الطائف.<br>
       • <b>الليلي (12ص–8ص):</b> شخص واحد فقط يومياً (أي فرع عدا مصر، والأفضل من جدة)، واليوم التالي إجازة.<br>
       • <b>شيفتات الوسط / نص اليوم (11–7، 1–9، 3–11):</b> التغذية من كل الفروع مختلطة، وتُغطّى الذروة (3–5 عصراً) بتداخلها.<br>
+      • <b>السبليت (9–12 ظهراً + 2–7 مساءً):</b> مناوبة مقسومة لساعتين صباحاً و5 مساءً (8 ساعات عمل مع استراحة ظهر).<br>
       • جدة تعمل حتى منتصف الليل (3–11 و4–12 شباب فقط)، والطائف حتى 9 مساءً (1–9 فقط)، ومصر كول سنتر بلا ليلي.
       <h4>👧 الموظفات</h4>
       البنات أقصى انصراف 9 مساءً، و<b>ريم ورغد</b> أقصى انصراف 7 مساءً (11–7 فقط).
@@ -227,6 +230,7 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
         <span class="lg"><span class="sw B">1 م – 9 م</span> وسط</span>
         <span class="lg"><span class="sw E">3 م – 11 م</span> إغلاق</span>
         <span class="lg"><span class="sw C">4 م – 12 ص</span> مساء متأخر</span>
+        <span class="lg"><span class="sw S">9–12 ظ + 2–7 م</span> سبليت (مناوبة مقسومة)</span>
         <span class="lg"><span class="sw N">12 ص – 8 ص</span> ليلي</span>
         <span class="lg"><span class="sw O">إ</span> إجازة</span>
       </div>
@@ -236,7 +240,7 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
 
 <script>
 const DAYS=["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"], DATES=["5 سبتمبر 2026", "6 سبتمبر 2026", "7 سبتمبر 2026", "8 سبتمبر 2026", "9 سبتمبر 2026", "10 سبتمبر 2026", "11 سبتمبر 2026"], SEED=[{"name":"لولوه","br":"جده","f":1,"shifts":["N","O","D","B","B","B","O"]},{"name":"لينا","br":"جده","f":1,"shifts":["A","A","N","O","B","A","O"]},{"name":"فتون","br":"جده","f":1,"shifts":["A","A","A","B","D","N","O"]},{"name":"سماح","br":"طائف","f":1,"shifts":["A","A","A","A","A","B","O"]},{"name":"الهنوف","br":"طائف","f":1,"shifts":["D","B","B","B","B","B","O"]},{"name":"ريم","br":"مصر","f":1,"shifts":["A","A","A","A","A","A","O"]},{"name":"رغد","br":"مصر","f":1,"shifts":["A","A","A","A","A","A","O"]},{"name":"مشاري","br":"جده","f":0,"shifts":["B","O","E","C","E","D","N"]},{"name":"وليد","br":"جده","f":0,"shifts":["E","D","E","N","O","C","C"]},{"name":"شهاب","br":"جده","f":0,"shifts":["E","N","O","D","B","E","O"]},{"name":"خالد","br":"جده","f":0,"shifts":["D","E","E","E","N","O","C"]},{"name":"تركي","br":"طائف","f":0,"shifts":["B","D","D","B","B","B","O"]},{"name":"عبداللطيف","br":"طائف","f":0,"shifts":["B","B","B","D","D","D","O"]},{"name":"احمد حسن","br":"مصر","f":0,"shifts":["B","B","B","B","B","B","O"]},{"name":"طارق","br":"مصر","f":0,"shifts":["B","B","E","B","O","B","B"]},{"name":"عبدالله","br":"مصر","f":0,"shifts":["B","B","B","B","B","B","O"]},{"name":"ابراهيم","br":"مصر","f":0,"shifts":["B","B","B","E","E","B","O"]}];
-const OPTS=[["D","8 ص – 4 م"],["A","11 ص – 7 م"],["B","1 م – 9 م"],["E","3 م – 11 م"],["C","4 م – 12 ص"],["N","ليلي 12 ص – 8 ص"],["O","إجازة"]];
+const OPTS=[["D","8 ص – 4 م"],["A","11 ص – 7 م"],["B","1 م – 9 م"],["E","3 م – 11 م"],["C","4 م – 12 ص"],["S","سبليت 9ص–12ظ + 2–7م"],["N","ليلي 12 ص – 8 ص"],["O","إجازة"]];
 const GIRLS7=["ريم","رغد"];
 const KEY="rawad_24h_v9";
 const SUPA_URL="https://dpfmbcqluhonydvfkhwh.supabase.co";
@@ -487,8 +491,8 @@ function generateRandom(){
   STATE=res;save();closeAll();render();}
 function addRow(){STATE.push({name:"موظف جديد",br:"جده",f:0,shifts:["O","O","O","O","O","O","O"]});save();render();}
 function resetTable(){if(confirm("استرجاع الجدول الأساسي؟")){STATE=SEED.map(r=>({...r,shifts:[...r.shifts]}));save();render();}}
-const LAB={D:"8ص–4م",A:"11ص–7م",B:"1م–9م",E:"3م–11م",C:"4م–12ص",N:"ليلي 12ص–8ص",O:"إجازة"};
-const XL={D:["#E8F6F4","#0C5160"],A:["#EFEEF9","#4F4F9E"],B:["#5B5BB0","#FFFFFF"],E:["#0C5160","#FFFFFF"],C:["#1F5FA8","#FFFFFF"],N:["#332C64","#FFFFFF"],O:["#EFF2F4","#64747E"]};
+const LAB={D:"8ص–4م",A:"11ص–7م",B:"1م–9م",E:"3م–11م",C:"4م–12ص",S:"سبليت 9–12 + 2–7",N:"ليلي 12ص–8ص",O:"إجازة"};
+const XL={D:["#E8F6F4","#0C5160"],A:["#EFEEF9","#4F4F9E"],B:["#5B5BB0","#FFFFFF"],E:["#0C5160","#FFFFFF"],C:["#1F5FA8","#FFFFFF"],S:["#FDEBD8","#C55A11"],N:["#332C64","#FFFFFF"],O:["#EFF2F4","#64747E"]};
 function exportExcel(){
   const h=c=>String(c).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   const brColor={جده:"#0C5160",طائف:"#6E6EB8",مصر:"#2FB3A6"};
