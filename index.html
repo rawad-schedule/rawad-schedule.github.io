@@ -266,10 +266,10 @@ body.locked .readonly-note{display:block;}
 const DAYS=["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"], DATES=["5 سبتمبر 2026", "6 سبتمبر 2026", "7 سبتمبر 2026", "8 سبتمبر 2026", "9 سبتمبر 2026", "10 سبتمبر 2026", "11 سبتمبر 2026"], SEED=[{"name":"لولوه","br":"جده","f":1,"shifts":["N","O","D","B","B","B","O"]},{"name":"لينا","br":"جده","f":1,"shifts":["A","A","N","O","B","A","O"]},{"name":"فتون","br":"جده","f":1,"shifts":["A","A","A","B","D","N","O"]},{"name":"سماح","br":"طائف","f":1,"shifts":["A","A","A","A","A","B","O"]},{"name":"الهنوف","br":"طائف","f":1,"shifts":["D","B","B","B","B","B","O"]},{"name":"ريم","br":"مصر","f":1,"shifts":["A","A","A","A","A","A","O"]},{"name":"رغد","br":"مصر","f":1,"shifts":["A","A","A","A","A","A","O"]},{"name":"مشاري","br":"جده","f":0,"shifts":["B","O","E","C","E","D","N"]},{"name":"وليد","br":"جده","f":0,"shifts":["E","D","E","N","O","C","C"]},{"name":"شهاب","br":"جده","f":0,"shifts":["E","N","O","D","B","E","O"]},{"name":"خالد","br":"جده","f":0,"shifts":["D","E","E","E","N","O","C"]},{"name":"تركي","br":"طائف","f":0,"shifts":["B","D","D","B","B","B","O"]},{"name":"عبداللطيف","br":"طائف","f":0,"shifts":["B","B","B","D","D","D","O"]},{"name":"احمد حسن","br":"مصر","f":0,"shifts":["B","B","B","B","B","B","O"]},{"name":"طارق","br":"مصر","f":0,"shifts":["B","B","E","B","O","B","B"]},{"name":"عبدالله","br":"مصر","f":0,"shifts":["B","B","B","B","B","B","O"]},{"name":"ابراهيم","br":"مصر","f":0,"shifts":["B","B","B","E","E","B","O"]}];
 const OPTS=[["D","8 ص – 4 م"],["S","سبليت"],["K","9 ص – 5 م"],["G","10 ص – 6 م"],["A","11 ص – 7 م"],["B","1 م – 9 م"],["E","3 م – 11 م"],["C","4 م – 12 ص"],["N","ليلي 12 ص – 8 ص"],["O","إجازة"]];
 const GIRLS7=["ريم","رغد"];
-const ADMIN_PIN="6397";
-const ADMIN_KEY="rawad_admin_v1";
-let isAdmin=false;
-try{isAdmin=sessionStorage.getItem(ADMIN_KEY)==="1";}catch(e){}
+const ADMIN_KEY="rawad_admin_pin_v1";
+let adminPin="";
+try{adminPin=sessionStorage.getItem(ADMIN_KEY)||"";}catch(e){}
+let isAdmin=!!adminPin;
 const KEY="rawad_24h_v9";
 const SUPA_URL="https://dpfmbcqluhonydvfkhwh.supabase.co";
 const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRwZm1iY3FsdWhvbnlkdmZraHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcyNzIzNDgsImV4cCI6MjEwMjg0ODM0OH0.w4k0bgjF2rkhLDzr4-XBbxTA6KqQe-JNpXK7UzrBB4M";
@@ -290,9 +290,8 @@ async function pushCloud(){
   saveLocal();
   if(pushing)return;pushing=true;
   try{const payload=sig(STATE);
-    const h=Object.assign({},SUPA_HDR,{"Prefer":"resolution=merge-duplicates,return=minimal"});
-    const r=await fetch(SUPA_URL+"/rest/v1/schedule",{method:"POST",headers:h,body:JSON.stringify({id:1,data:STATE,updated_at:new Date().toISOString()})});
-    cloudOK=r.ok;if(r.ok){cloudSig=payload;dirty=false;}setDot(r.ok);
+    const ok=await rpcSave(STATE,adminPin);
+    cloudOK=ok;if(ok){cloudSig=payload;dirty=false;}setDot(ok);
   }catch(e){setDot(false);}finally{pushing=false;}}
 let pushTimer=null;
 function save(){if(!isAdmin)return;dirty=true;clearTimeout(pushTimer);pushTimer=setTimeout(pushCloud,450);}
@@ -307,8 +306,8 @@ async function pullCloud(announce){
     const rows=await r.json();
     let data=rows&&rows.length&&Array.isArray(rows[0].data)&&rows[0].data.length?norm(rows[0].data):null;
     setDot(true);
-    if(!data){ // السحابة فاضية — ادفع الحالي أول مرة فقط
-      if(!cloudSig){await pushCloud();}
+    if(!data){ // السحابة فاضية
+      if(!cloudSig&&isAdmin){await pushCloud();}
       return;}
     const s=sig(data);
     if(cloudSig===null){ // أول تحميل: السحابة هي المرجع دائماً
@@ -582,15 +581,27 @@ function applyLock(){
   const mt=document.getElementById("menuLockTxt");if(mt)mt.textContent=isAdmin?"قفل التعديل (خروج المشرف)":"دخول المشرف (للتعديل)";
   const mi=document.getElementById("menuLockIco");if(mi)mi.textContent=isAdmin?"🔓":"🔒";
 }
-function adminToggle(){
+async function rpcSave(data,pin){
+  const r=await fetch(SUPA_URL+"/rest/v1/rpc/save_schedule",{method:"POST",
+    headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"application/json"},
+    body:JSON.stringify({p_pin:pin,p_data:data})});
+  if(!r.ok)return false;
+  const j=await r.json();
+  return j===true||j==="true"||(Array.isArray(j)&&j[0]===true);
+}
+async function adminToggle(){
   if(isAdmin){
-    if(confirm("إغلاق وضع التعديل والعودة للعرض فقط؟")){isAdmin=false;try{sessionStorage.removeItem(ADMIN_KEY);}catch(e){}applyLock();render();}
+    if(confirm("إغلاق وضع التعديل والعودة للعرض فقط؟")){isAdmin=false;adminPin="";try{sessionStorage.removeItem(ADMIN_KEY);}catch(e){}applyLock();render();}
     return;}
   const v=prompt("أدخل كود المشرف لتفعيل التعديل:","");
   if(v===null)return;
-  if(v.trim()===ADMIN_PIN){isAdmin=true;try{sessionStorage.setItem(ADMIN_KEY,"1");}catch(e){}applyLock();render();alert("✅ تم تفعيل وضع المشرف — يمكنك التعديل الآن.");}
-  else alert("❌ كود غير صحيح. التعديل يظل مقفولاً.");
+  const pin=v.trim();if(!pin)return;
+  setDotText("🔐 جارٍ التحقق من كود المشرف…");
+  const ok=await rpcSave(STATE,pin); // تحقّق من الكود بمحاولة حفظ فعلية عبر السيرفر
+  if(ok){isAdmin=true;adminPin=pin;try{sessionStorage.setItem(ADMIN_KEY,pin);}catch(e){}applyLock();render();setDot(true);alert("✅ تم تفعيل وضع المشرف — يمكنك التعديل الآن.");}
+  else{setDot(false);alert("❌ كود غير صحيح أو تعذّر الاتصال بالخادم. التعديل يظل مقفولاً.");}
 }
+function setDotText(txt){const t=document.getElementById("cloudTxt");if(t)t.textContent=txt;}
 
 /* بدء التشغيل: اعرض المحلي فوراً ثم اجلب السحابة (المرجع الموحّد) */
 applyLock();
