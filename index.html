@@ -93,6 +93,7 @@ tfoot th{color:#fff;border-radius:10px;padding:8px 6px;font-size:12px;}
 tfoot tr.tot th{background:var(--teal-d);} tfoot tr.j th{background:var(--teal);}
 tfoot tr.t th{background:var(--purple);} tfoot tr.e th{background:var(--purple-2);}
 tfoot tr.o th{background:#1B7A43;}
+tfoot tr.wrn th{background:#E0A636;color:#342800;} tfoot tr.rwrn th{background:#C0392B;}
 tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
 .cloudline{display:flex;align-items:center;gap:9px;justify-content:center;margin-top:16px;font-size:13px;font-weight:700;color:var(--gray);}
 #cloudDot,#cloudDot2{width:11px;height:11px;border-radius:50%;background:#E0A636;display:inline-block;}
@@ -154,6 +155,55 @@ body.locked .admin-only{display:none!important;}
 .readonly-note{display:none;margin:0 0 12px;background:#FDEBD8;border:1px solid #F2C49B;color:#C55A11;
   border-radius:12px;padding:10px 16px;font-weight:800;font-size:13px;text-align:center;}
 body.locked .readonly-note{display:block;}
+
+/* ===== قوائم منسدلة مخصصة (بدل تصميم ويندوز) ===== */
+.dropdown{position:relative;width:100%;height:100%;}
+.dd-btn{width:100%;height:100%;border:0;border-radius:10px;font-family:inherit;font-weight:800;font-size:11.5px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:5px;padding:3px 2px;line-height:1.25;}
+.dd-arrow{font-size:9px;opacity:.85;}
+.dd-menu{position:absolute;top:calc(100% + 6px);right:50%;transform:translateX(50%);min-width:172px;background:#fff;border:1px solid var(--line);
+  border-radius:14px;box-shadow:0 18px 46px rgba(12,40,55,.25);z-index:80;overflow:hidden;display:none;max-height:300px;overflow-y:auto;padding:5px;}
+.dropdown.open .dd-menu{display:block;}
+.dd-opt{display:block;width:100%;text-align:right;border:0;background:#fff;font-family:inherit;font-weight:700;font-size:12.5px;
+  padding:9px 12px;cursor:pointer;color:var(--ink);border-radius:9px;}
+.dd-opt:hover{background:var(--teal-soft);}
+.dd-opt.sel{background:var(--teal-soft);color:var(--teal-d);font-weight:800;}
+.dd-btn.D{color:var(--teal-d);background:var(--teal-soft);}
+.dd-btn.K{color:#1A5FA0;background:#E2EEFB;}
+.dd-btn.G{color:#1B7A43;background:#E3F5EA;}
+.dd-btn.A{color:var(--purple-d);background:var(--purple-soft);}
+.dd-btn.B{color:#fff;background:var(--purple-2);}
+.dd-btn.E{color:#fff;background:var(--teal-d);}
+.dd-btn.C{color:#fff;background:#1F5FA8;}
+.dd-btn.S{color:#C55A11;background:#FDEBD8;}
+.dd-btn.N{color:#fff;background:var(--night);}
+.dd-btn.O{color:var(--gray);background:var(--off);}
+.cell{position:relative;overflow:visible;}
+.brdd{width:auto;height:auto;align-self:center;}
+.brdd .dd-btn{font-size:10px;padding:5px 9px;border-radius:7px;border:1.5px solid;min-width:66px;}
+.dd-btn.جده{background:var(--teal-d);color:#fff;border-color:var(--teal-d);}
+.dd-btn.طائف{background:var(--purple);color:#fff;border-color:var(--purple);}
+.dd-btn.مصر{background:#fff;color:var(--teal-d);border-color:var(--teal);}
+.dd-btn.أوبريشن{background:#1B7A43;color:#fff;border-color:#1B7A43;}
+
+/* ===== تحذير الراحة بين الشيفتات ===== */
+.rest-warn{position:absolute;top:-9px;left:-9px;z-index:6;min-width:22px;height:22px;padding:0 4px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;box-shadow:0 3px 8px rgba(0,0,0,.3);
+  background:#FFD54A;color:#5a4500;border:2px solid #fff;cursor:help;}
+.rest-warn.red{background:#E23B3B;color:#fff;}
+.rest-warn::after{content:"⚠";font-size:12px;}
+.rest-warn.red::after{content:"⛔";font-size:11px;}
+
+/* ===== نوافذ تنبيه/تأكيد/إدخال مخصصة ===== */
+.dlgbox{max-width:440px;}
+.dlg-input{width:100%;margin-top:14px;font-family:inherit;font-size:16px;font-weight:700;text-align:center;direction:ltr;
+  padding:12px 14px;border:2px solid var(--teal);border-radius:12px;outline:none;letter-spacing:2px;}
+.dlg-input:focus{border-color:var(--purple);box-shadow:0 0 0 3px var(--purple-soft);}
+.dlg-actions{display:flex;gap:10px;justify-content:flex-start;margin-top:18px;}
+.dlg-btn{font-family:inherit;border:0;border-radius:12px;padding:11px 22px;font-size:14px;font-weight:800;cursor:pointer;}
+.dlg-btn.primary{background:linear-gradient(135deg,#0C5160,#2FB3A6);color:#fff;}
+.dlg-btn.ghost{background:var(--off);color:var(--gray);}
+#dlgMsg{font-size:14.5px;font-weight:700;line-height:1.9;}
 </style>
 </head>
 <body>
@@ -258,6 +308,22 @@ body.locked .readonly-note{display:block;}
         <span class="lg"><span class="sw N">12 ص – 8 ص</span> ليلي</span>
         <span class="lg"><span class="sw O">إ</span> إجازة</span>
       </div>
+      <h4>⚠️ تنبيهات الراحة بين الشيفتات</h4>
+      لازم الفرق بين نهاية شيفت وبداية الشيفت التالي <b>12 ساعة على الأقل</b> لكل موظف:
+      <span class="badgebox"><span class="rest-warn" style="position:static"></span> <b>مثلث أصفر:</b> راحة أقل من 12 ساعة (ملاحظة لازم تراجعها).</span>
+      <span class="badgebox"><span class="rest-warn red" style="position:static"></span> <b>أحمر ⛔:</b> راحة أقل من 9 ساعات (خطأ لازم يتصلح فوراً).</span>
+      وقف على المثلث لتظهر تفاصيل عدد ساعات الراحة، وعدد التنبيهات ظاهر في صفوف أسفل الجدول لكل يوم.
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="dlgModal">
+  <div class="box dlgbox">
+    <div class="mh"><h3 id="dlgTitle">تنبيه</h3><button onclick="resolveDlg(null)">✕</button></div>
+    <div class="mc">
+      <div id="dlgMsg"></div>
+      <input class="dlg-input" id="dlgInput" type="password" autocomplete="off" style="display:none">
+      <div class="dlg-actions" id="dlgActions"></div>
     </div>
   </div>
 </div>
@@ -284,7 +350,7 @@ function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(STATE));}catch(
 function userBusy(){
   const a=document.activeElement;
   if(a&&(a.tagName==="SELECT"||a.tagName==="INPUT"||a.isContentEditable))return true;
-  if(document.querySelector(".rowmenu.open,.modal.open"))return true;
+  if(document.querySelector(".rowmenu.open,.modal.open,.dropdown.open"))return true;
   return false;}
 async function pushCloud(){
   saveLocal();
@@ -323,9 +389,89 @@ window.addEventListener("focus",()=>pullCloud(true));
 function openMenu(){document.getElementById("menuModal").classList.add("open");document.getElementById("overlay").classList.add("open");}
 function openInfo(){document.getElementById("infoModal").classList.add("open");document.getElementById("overlay").classList.add("open");}
 function closeAll(){["drawer","menuModal","infoModal"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove("open");});
-  document.getElementById("overlay").classList.remove("open");document.querySelectorAll(".rowmenu").forEach(m=>m.classList.remove("open"));}
+  if(!document.getElementById("dlgModal").classList.contains("open"))document.getElementById("overlay").classList.remove("open");
+  document.querySelectorAll(".rowmenu").forEach(m=>m.classList.remove("open"));closeDropdowns();}
 document.addEventListener("click",e=>{if(!e.target.closest(".empcell"))document.querySelectorAll(".rowmenu").forEach(m=>m.classList.remove("open"));});
 function isGirl(r){return !!r.f;}
+
+/* ===== تحذير وقت الراحة بين الشيفتين (أقل من 12 ساعة) ===== */
+// أوقات بدايات ونهايات الشيفتات بالساعة (الأرقام بعد منتصف الليل)
+const SHIFT_HOURS={
+  D:{start:8,end:16},
+  K:{start:9,end:17},
+  G:{start:10,end:18},
+  A:{start:11,end:19},
+  B:{start:13,end:21},
+  S:{start:9,end:19},   // سبليت: 9–12 و 14–19 (آخر انصراف 7م)
+  E:{start:15,end:23},
+  C:{start:16,end:24},
+  N:{start:0,end:8},
+  O:null
+};
+function gapBetween(prev,next){
+  const p=SHIFT_HOURS[prev],n=SHIFT_HOURS[next];
+  if(!p||!n)return null;
+  let g=n.start-p.end;
+  if(n.start<p.end)g+=24;
+  return g;
+}
+function restLevel(hours){
+  if(hours===null)return null;
+  if(hours<12){
+    if(hours<9)return {level:"red",label:"راحة خطيرة جداً: "+hours+" ساعة فقط — خطأ يجب تصحيحه فوراً"};
+    return {level:"warn",label:"راحة غير كافية: "+hours+" ساعة فقط — لازم تكون 12 ساعة على الأقل"};
+  }
+  return null;
+}
+function restWarnFor(row,ci){
+  if(ci<=0)return null;
+  const prev=row.shifts[ci-1],cur=row.shifts[ci];
+  return restLevel(gapBetween(prev,cur));
+}
+
+/* ===== نوافذ تنبيه/تأكيد/إدخال مخصصة ===== */
+let dlgResolver=null;
+function openDlg(title,msg,type,def){
+  return new Promise(res=>{
+    dlgResolver=res;
+    document.getElementById("dlgTitle").textContent=title||"تنبيه";
+    document.getElementById("dlgMsg").innerHTML=msg||"";
+    const inp=document.getElementById("dlgInput");
+    const acts=document.getElementById("dlgActions");
+    acts.innerHTML="";
+    inp.value=def||"";inp.style.display=type==="prompt"?"block":"none";
+    const mk=(txt,cls,val)=>{const b=document.createElement("button");b.className="dlg-btn "+cls;b.textContent=txt;b.onclick=()=>resolveDlg(type==="prompt"&&val!==null?inp.value:val);acts.appendChild(b);};
+    if(type==="alert"){mk("حسناً","primary",true);}
+    else if(type==="confirm"){mk("تأكيد","primary",true);mk("إلغاء","ghost",false);}
+    else{mk("إرسال","primary",true);mk("إلغاء","ghost",null);}
+    document.getElementById("dlgModal").classList.add("open");document.getElementById("overlay").classList.add("open");
+    if(type==="prompt"){setTimeout(()=>{inp.focus();},80);inp.onkeydown=e=>{if(e.key==="Enter")resolveDlg(inp.value);if(e.key==="Escape")resolveDlg(null);};}
+  });
+}
+function resolveDlg(v){document.getElementById("dlgModal").classList.remove("open");document.getElementById("overlay").classList.remove("open");if(dlgResolver){dlgResolver(v);dlgResolver=null;}}
+function dlgAlert(msg){return openDlg("تنبيه",msg,"alert");}
+function dlgConfirm(msg){return openDlg("تأكيد",msg,"confirm");}
+function dlgPrompt(title,def){return openDlg(title||"إدخال","","prompt",def);}
+
+/* ===== قائمة منسدلة مخصصة ===== */
+function closeDropdowns(){document.querySelectorAll(".dropdown.open").forEach(d=>d.classList.remove("open"));}
+document.addEventListener("click",e=>{if(!e.target.closest(".dropdown"))closeDropdowns();});
+function makeDropdown(options,current,onPick,opt){
+  opt=opt||{};
+  const wrap=document.createElement("div");wrap.className="dropdown "+(opt.wrapClass||"");
+  const btn=document.createElement("button");btn.type="button";btn.className="dd-btn "+(opt.btnClass?(opt.btnClass+" "):"")+current;
+  const curOpt=options.find(o=>o[0]===current);
+  const titleFn=opt.title||(o=>o[1]);
+  btn.innerHTML='<span>'+(curOpt?titleFn(curOpt):"")+'</span><span class="dd-arrow">▼</span>';
+  if(opt.lockBtn)btn.disabled=true;
+  btn.onclick=e=>{e.stopPropagation();const open=wrap.classList.contains("open");closeDropdowns();if(!open)wrap.classList.add("open");};
+  const menu=document.createElement("div");menu.className="dd-menu";
+  options.forEach(o=>{const b=document.createElement("button");b.type="button";b.className="dd-opt"+(o[0]===current?" sel":"");b.textContent=titleFn(o);b.title=o[2]||titleFn(o);
+    b.onclick=e=>{e.stopPropagation();closeDropdowns();onPick(o[0],o[1]);};
+    menu.appendChild(b);});
+  wrap.appendChild(btn);wrap.appendChild(menu);
+  return wrap;
+}
 function head(){
   const tr=document.getElementById("headRow");tr.innerHTML="";
   const e=document.createElement("th");e.className="emp";e.textContent="الموظف / الفرع";tr.appendChild(e);
@@ -334,15 +480,15 @@ function head(){
 }
 function shiftCell(val,ri,ci){
   const td=document.createElement("td");const w=document.createElement("div");w.className="cell";
-  const sel=document.createElement("select");sel.className="s "+val;
   const FULL={D:"8 ص – 4 م",S:"سبليت: 9 ص–12 ظ + 2 م–7 م",K:"9 ص – 5 م",G:"10 ص – 6 م",A:"11 ص – 7 م",B:"1 م – 9 م",E:"3 م – 11 م",C:"4 م – 12 ص",N:"ليلي 12 ص – 8 ص",O:"إجازة"};
-  sel.title=FULL[val]||"";
-  OPTS.forEach(([v,l])=>{const o=document.createElement("option");o.value=v;o.textContent=l;o.title=FULL[v]||"";if(v===val)o.selected=true;sel.appendChild(o);});
-  sel.addEventListener("change",()=>applyShift(ri,ci,sel.value,val,sel));
-  w.appendChild(sel);td.appendChild(w);return td;
+  const dd=makeDropdown(OPTS,val,(nv)=>applyShift(ri,ci,nv,val,null),{lockBtn:!isAdmin,title:o=>FULL[o[0]]||o[1]});
+  w.appendChild(dd);
+  const warn=restWarnFor(STATE[ri],ci);
+  if(warn){const b=document.createElement("span");b.className="rest-warn "+(warn.level==="red"?"red":"");b.title=warn.label;b.textContent="";w.appendChild(b);}
+  td.appendChild(w);return td;
 }
-function applyShift(ri,ci,val,prev,sel){
-  if(!isAdmin){if(sel)sel.value=prev;return;}
+function applyShift(ri,ci,val,prev){
+  if(!isAdmin){return;}
   STATE[ri].shifts[ci]=val;
   save();render();}
 let VIEW="all";
@@ -369,12 +515,14 @@ function render(){
     const more=document.createElement("button");more.className="more";more.textContent="⋮";
     const menu=document.createElement("div");menu.className="rowmenu";
     const del=document.createElement("button");del.className="danger";del.textContent="🗑 حذف الموظف";
-    del.onclick=e=>{e.stopPropagation();if(!isAdmin){alert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}if(confirm("حذف "+row.name+"؟")){STATE.splice(ri,1);save();render();}};
+    del.onclick=async e=>{e.stopPropagation();if(!isAdmin){dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}if(await dlgConfirm("حذف "+row.name+"؟")){STATE.splice(ri,1);save();render();}};
     menu.appendChild(del);
     more.addEventListener("click",e=>{e.stopPropagation();document.querySelectorAll(".rowmenu").forEach(m=>{if(m!==menu)m.classList.remove("open");});menu.classList.toggle("open");});
-    const bb=document.createElement("select");bb.className="brsel "+row.br;
-    ["جده","طائف","مصر","أوبريشن"].forEach(b=>{const o=document.createElement("option");o.value=b;o.textContent=b;if(b===row.br)o.selected=true;bb.appendChild(o);});
-    bb.addEventListener("change",()=>{if(!isAdmin){bb.value=row.br;alert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}row.br=bb.value;bb.className="brsel "+row.br;save();render();});
+    const brOpts=["جده","طائف","مصر","أوبريشن"].map(b=>[b,b]);
+    const bb=makeDropdown(brOpts,row.br,(nv)=>{
+      if(!isAdmin){dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}
+      STATE[ri].br=nv;save();render();
+    },{wrapClass:"brdd",btnClass:row.br,lockBtn:!isAdmin});
     ec.appendChild(span);ec.appendChild(bb);ec.appendChild(more);ec.appendChild(menu);
     nm.appendChild(ec);tr.appendChild(nm);
     row.shifts.forEach((v,ci)=>tr.appendChild(shiftCell(v,ri,ci)));
@@ -413,7 +561,9 @@ function footer(){
   F("j","افتتاح/إغلاق جدة",di=>STATE.filter(r=>r.br==="جده"&&r.shifts[di]!=="O").length);
   F("t","فرع الطائف",di=>STATE.filter(r=>r.br==="طائف"&&r.shifts[di]!=="O").length);
   F("e","مصر كول سنتر",di=>STATE.filter(r=>r.br==="مصر"&&r.shifts[di]!=="O").length);
-  F("o","أوبريشن",di=>STATE.filter(r=>r.br==="أوبريشن"&&r.shifts[di]!=="O").length);}
+  F("o","أوبريشن",di=>STATE.filter(r=>r.br==="أوبريشن"&&r.shifts[di]!=="O").length);
+  F("wrn","⚠️ راحة أقل من 12 ساعة",di=>{let c=0;STATE.forEach(r=>{if(restWarnFor(r,di)&&restWarnFor(r,di).level==="warn")c++;});return c?"⚠️ "+c:"—";});
+  F("rwrn","⛔ راحة أقل من 9 ساعات",di=>{let c=0,n=[];STATE.forEach(r=>{const w=restWarnFor(r,di);if(w&&w.level==="red"){c++;n.push(r.name);}});return c?"⛔ "+c+" ("+n.join("، ")+")":"—";});}
 function cards(){
   document.getElementById("cEmp").textContent=STATE.length;
   document.getElementById("cNight").textContent=STATE.reduce((a,r)=>a+r.shifts.filter(v=>v==="N").length,0);
@@ -523,13 +673,13 @@ function buildRandom(){
     const err=validate(fin);if(!err)return fin;
   }
   return null;}
-function generateRandom(){
-  if(!isAdmin){alert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}
-  if(!confirm("توليد سيكل جديد بالقواعد (صباحي واحد لكل فرع + ليلي واحد)؟"))return;
-  const res=buildRandom();if(!res){alert("تعذّر التوليد — جرّب مرة أخرى.");return;}
+async function generateRandom(){
+  if(!isAdmin){dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}
+  if(!await dlgConfirm("توليد سيكل جديد بالقواعد (صباحي واحد لكل فرع + ليلي واحد)؟"))return;
+  const res=buildRandom();if(!res){dlgAlert("تعذّر التوليد — جرّب مرة أخرى.");return;}
   STATE=res;save();closeAll();render();}
-function addRow(){if(!isAdmin){alert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}STATE.push({name:"موظف جديد",br:"جده",f:0,shifts:["O","O","O","O","O","O","O"]});save();render();}
-function resetTable(){if(!isAdmin){alert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}if(confirm("استرجاع الجدول الأساسي؟")){STATE=SEED.map(r=>({...r,shifts:[...r.shifts]}));save();render();}}
+function addRow(){if(!isAdmin){dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}STATE.push({name:"موظف جديد",br:"جده",f:0,shifts:["O","O","O","O","O","O","O"]});save();render();}
+async function resetTable(){if(!isAdmin){dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}if(await dlgConfirm("استرجاع الجدول الأساسي؟")){STATE=SEED.map(r=>({...r,shifts:[...r.shifts]}));save();render();}}
 const LAB={D:"8ص–4م",S:"سبليت 9–12 + 2–7",K:"9ص–5م",G:"10ص–6م",A:"11ص–7م",B:"1م–9م",E:"3م–11م",C:"4م–12ص",N:"ليلي 12ص–8ص",O:"إجازة"};
 const XL={D:["#E8F6F4","#0C5160"],S:["#FDEBD8","#C55A11"],K:["#E2EEFB","#1A5FA0"],G:["#E3F5EA","#1B7A43"],A:["#EFEEF9","#4F4F9E"],B:["#5B5BB0","#FFFFFF"],E:["#0C5160","#FFFFFF"],C:["#1F5FA8","#FFFFFF"],N:["#332C64","#FFFFFF"],O:["#EFF2F4","#64747E"]};
 function exportExcel(){
@@ -570,8 +720,8 @@ function exportExcel(){
   a.download="جدول_رواد_النخبة.xls";a.click();}
 function exportJSON(){const b=new Blob([JSON.stringify(STATE,null,2)],{type:"application/json"});
   const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="رواد_النخبة_نسخة.json";a.click();}
-function importJSON(ev){if(!isAdmin){ev.target.value="";alert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}const f=ev.target.files[0];if(!f)return;const rd=new FileReader();
-  rd.onload=()=>{try{const d=JSON.parse(rd.result);if(Array.isArray(d)){STATE=d;save();render();closeAll();alert("تم الاستيراد.");}else alert("ملف غير صالح.");}catch(e){alert("تعذر القراءة.");}};
+function importJSON(ev){if(!isAdmin){ev.target.value="";dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}const f=ev.target.files[0];if(!f)return;const rd=new FileReader();
+  rd.onload=()=>{try{const d=JSON.parse(rd.result);if(Array.isArray(d)){STATE=d;save();render();closeAll();dlgAlert("تم الاستيراد.");}else dlgAlert("ملف غير صالح.");}catch(e){dlgAlert("تعذر القراءة.");}};
   rd.readAsText(f);ev.target.value="";}
 /* ============ صلاحيات المشرف / العرض ============ */
 function applyLock(){
@@ -591,15 +741,15 @@ async function rpcSave(data,pin){
 }
 async function adminToggle(){
   if(isAdmin){
-    if(confirm("إغلاق وضع التعديل والعودة للعرض فقط؟")){isAdmin=false;adminPin="";try{sessionStorage.removeItem(ADMIN_KEY);}catch(e){}applyLock();render();}
+    if(await dlgConfirm("إغلاق وضع التعديل والعودة للعرض فقط؟")){isAdmin=false;adminPin="";try{sessionStorage.removeItem(ADMIN_KEY);}catch(e){}applyLock();render();}
     return;}
-  const v=prompt("أدخل كود المشرف لتفعيل التعديل:","");
+  const v=await dlgPrompt("أدخل كود المشرف لتفعيل التعديل","");
   if(v===null)return;
   const pin=v.trim();if(!pin)return;
   setDotText("🔐 جارٍ التحقق من كود المشرف…");
   const ok=await rpcSave(STATE,pin); // تحقّق من الكود بمحاولة حفظ فعلية عبر السيرفر
-  if(ok){isAdmin=true;adminPin=pin;try{sessionStorage.setItem(ADMIN_KEY,pin);}catch(e){}applyLock();render();setDot(true);alert("✅ تم تفعيل وضع المشرف — يمكنك التعديل الآن.");}
-  else{setDot(false);alert("❌ كود غير صحيح أو تعذّر الاتصال بالخادم. التعديل يظل مقفولاً.");}
+  if(ok){isAdmin=true;adminPin=pin;try{sessionStorage.setItem(ADMIN_KEY,pin);}catch(e){}applyLock();render();setDot(true);dlgAlert("✅ تم تفعيل وضع المشرف — يمكنك التعديل الآن.");}
+  else{setDot(false);dlgAlert("❌ كود غير صحيح أو تعذّر الاتصال بالخادم. التعديل يظل مقفولاً.");}
 }
 function setDotText(txt){const t=document.getElementById("cloudTxt");if(t)t.textContent=txt;}
 

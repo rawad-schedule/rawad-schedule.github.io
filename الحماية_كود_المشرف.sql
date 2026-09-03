@@ -1,6 +1,6 @@
 -- ============================================================
 -- حماية جدول الشفتات: القراءة للجميع، الكتابة بالمشرف فقط
--- جدول: public.schedule  |  كود المشرف: 6397
+-- جدول: public.schedule  |  كود المشرف: 201221
 -- نفّذ هذا الملف كاملاً في Supabase ← SQL Editor ← Run
 -- آمن للتشغيل أكثر من مرة.
 -- ============================================================
@@ -35,7 +35,7 @@ security definer
 set search_path = public
 as $$
 begin
-  if p_pin is null or p_pin <> '6397' then
+  if p_pin is null or p_pin <> '201221' then
     raise exception 'invalid pin';
   end if;
 
