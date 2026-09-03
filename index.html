@@ -20,9 +20,39 @@ body{margin:0;font-family:"Cairo","Tahoma",sans-serif;background:var(--bg);color
 h1,h2,h3,h4{font-weight:800;}
 
 /* الهيدر */
-.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
-.iconbtn{width:42px;height:42px;border-radius:13px;border:0;cursor:pointer;font-size:18px;color:var(--teal-d);
-  background:#fff;box-shadow:var(--shadow);font-family:inherit;}
+/* القائمة الجانبية */
+.fab{position:fixed;top:20px;right:20px;z-index:65;width:54px;height:54px;border-radius:16px;border:0;cursor:pointer;
+  font-size:22px;color:#fff;background:linear-gradient(135deg,#0C5160,#2FB3A6);box-shadow:0 12px 30px rgba(12,81,96,.4);
+  font-family:inherit;display:flex;align-items:center;justify-content:center;}
+.fab.info{right:84px;background:linear-gradient(135deg,#6E6EB8,#5B5BB0);}
+.wrap{padding-right:0;}
+@media(min-width:921px){
+  .wrap{max-width:calc(1320px + 0px);margin-right:268px;margin-left:auto;}
+}
+.overlay{position:fixed;inset:0;background:rgba(10,35,45,.5);opacity:0;visibility:hidden;transition:.25s;z-index:50;}
+.overlay.open{opacity:1;visibility:visible;}
+.drawer{position:fixed;top:0;right:0;width:280px;max-width:86vw;height:100%;background:#fff;z-index:60;
+  box-shadow:-14px 0 46px rgba(0,0,0,.2);display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform .32s cubic-bezier(.4,0,.2,1);}
+.drawer.open{transform:translateX(0);}
+@media(min-width:921px){
+  .drawer{transform:translateX(0);box-shadow:none;border-left:1px solid var(--line);}
+  .fab.menu{display:none;}
+  .overlay{display:none;}
+}
+.drawer h2{margin:0;padding:22px 20px 18px;background:linear-gradient(135deg,#0C5160,#5B5BB0);color:#fff;font-size:17px;
+  display:flex;justify-content:space-between;align-items:center;}
+.drawer h2 .x{background:rgba(255,255,255,.2);border:0;color:#fff;width:34px;height:34px;border-radius:10px;font-size:16px;cursor:pointer;font-family:inherit;}
+@media(min-width:921px){.drawer h2 .x{display:none;}}
+.drawer .body{padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
+.menubtn{font-family:inherit;border:0;border-radius:13px;padding:13px 14px;font-size:14px;font-weight:800;cursor:pointer;
+  text-align:right;display:flex;align-items:center;gap:11px;color:#fff;}
+.menubtn .ico{font-size:17px;}
+.mb-teal{background:linear-gradient(135deg,#35C2B3,#15807C);} .mb-purp{background:linear-gradient(135deg,#7B7BC8,#514FA6);}
+.mb-night{background:linear-gradient(135deg,#3C3473,#2A2456);} .mb-dark{background:linear-gradient(135deg,#106071,#093F49);}
+.mb-ghost{background:#fff;color:var(--teal-d);border:1.6px solid var(--teal);}
+.cloudcard{margin-top:4px;background:var(--teal-soft);border:1px solid var(--teal-line);border-radius:13px;padding:12px;
+  font-size:12px;color:var(--teal-d);font-weight:700;display:flex;gap:9px;align-items:center;}
 .hero{background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px 26px 20px;color:var(--ink);
   box-shadow:var(--shadow);position:relative;overflow:hidden;}
 .hero::before{content:"";position:absolute;top:0;left:0;right:0;height:6px;
@@ -111,22 +141,6 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
 .cloudline{display:flex;align-items:center;gap:9px;justify-content:center;margin-top:16px;font-size:13px;font-weight:700;color:var(--gray);}
 #cloudDot,#cloudDot2{width:11px;height:11px;border-radius:50%;background:#E0A636;display:inline-block;}
 
-/* القائمة الجانبية */
-.overlay{position:fixed;inset:0;background:rgba(10,35,45,.5);opacity:0;visibility:hidden;transition:.25s;z-index:50;}
-.overlay.open{opacity:1;visibility:visible;}
-.drawer{position:fixed;top:0;right:-360px;width:340px;max-width:90vw;height:100%;background:#fff;z-index:60;transition:right .32s cubic-bezier(.4,0,.2,1);
-  box-shadow:-12px 0 44px rgba(0,0,0,.22);display:flex;flex-direction:column;}
-.drawer.open{right:0;}
-.drawer h2{margin:0;padding:22px 18px 16px;background:linear-gradient(135deg,#0C5160,#5B5BB0);color:#fff;font-size:18px;display:flex;justify-content:space-between;align-items:center;}
-.drawer h2 .x{background:rgba(255,255,255,.2);border:0;color:#fff;width:36px;height:36px;border-radius:11px;font-size:18px;cursor:pointer;font-family:inherit;}
-.drawer .body{padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:11px;}
-.menubtn{font-family:inherit;border:0;border-radius:14px;padding:14px 15px;font-size:14.5px;font-weight:800;cursor:pointer;text-align:right;display:flex;align-items:center;gap:11px;color:#fff;}
-.menubtn .ico{font-size:18px;}
-.mb-teal{background:linear-gradient(135deg,#35C2B3,#15807C);} .mb-purp{background:linear-gradient(135deg,#7B7BC8,#514FA6);}
-.mb-night{background:linear-gradient(135deg,#3C3473,#2A2456);} .mb-dark{background:linear-gradient(135deg,#106071,#093F49);}
-.mb-ghost{background:#fff;color:var(--teal-d);border:1.6px solid var(--teal);}
-.cloudcard{margin-top:4px;background:var(--teal-soft);border:1px solid var(--teal-line);border-radius:14px;padding:13px;font-size:12.5px;color:var(--teal-d);font-weight:700;display:flex;gap:9px;align-items:center;}
-
 /* نافذة المعلومات */
 .modal{position:fixed;inset:0;background:rgba(10,35,45,.55);display:none;align-items:flex-start;justify-content:center;z-index:70;padding:22px;overflow-y:auto;}
 .modal.open{display:flex;}
@@ -146,10 +160,11 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
 .sw.C{background:#1F5FA8;}
 .sw.S{background:#FDEBD8;color:#C55A11;border:1px solid #F2C49B;}
 .sw.G{background:#E3F5EA;color:#1B7A43;border:1px solid #B7E3C6;} .sw.N{background:var(--night);}
-.sw.O{background:var(--off);color:var(--gray);}
+.sw.O{background:linear-gradient(180deg,#D6DEE4,#BECAD2);color:#46585F;}
 .badgebox{display:inline-flex;align-items:center;gap:8px;font-size:13px;margin:3px 0;}
 @media(max-width:760px){.cards{grid-template-columns:repeat(2,1fr);} body{padding:12px;} .hero{padding:18px 16px 16px;} .hero .logo{height:48px;width:48px;flex-basis:48px;} .hero h1{font-size:16px;} .hero-headrow{gap:12px;} .hero-inner{gap:11px;} .hero-pill{font-size:11px;padding:6px 12px;} .hero .rule{margin-top:6px;}}
-@media print{body{background:#fff;padding:0;} .topbar,.cloudline,.tabs,.drawer,.overlay,.modal,.rowmenu{display:none!important;}
+@media print{body{background:#fff;padding:0;} .fab,.topbar,.cloudline,.tabs,.drawer,.overlay,.modal,.rowmenu{display:none!important;}
+  .wrap{margin:0!important;max-width:100%!important;padding-right:0!important;}
   .panel{box-shadow:none;} table{min-width:0;border-spacing:3px;} tr{page-break-inside:avoid;} thead{display:table-header-group;}
   select.s{appearance:none;font-size:9px;} .cell{height:auto;} .more,.rowmenu,.dd-arrow,.dd-menu{display:none!important;} .hero{box-shadow:none;}
   .rest-bar{print-color-adjust:exact;-webkit-print-color-adjust:exact;}}
@@ -203,7 +218,7 @@ body.locked .readonly-note{display:block;}
 .m-g{background:linear-gradient(180deg,#DCF3E4,#C6E9D2);color:#16703C;}
 /* وسط */
 .m-a{background:linear-gradient(180deg,#E9E7F9,#D8D5F2);color:#433C8C;}
-.m-b{background:linear-gradient(180deg,#6E6EBE,#5A5AB0);color:#fff;}
+.m-b{background:linear-gradient(180deg,#8B6FD6 0%,#6A4FBE 55%,#57409E 100%);color:#fff;}
 .m-b .s-lb{opacity:.85;}
 /* إغلاق / مساء / ليلي */
 .m-e{background:linear-gradient(180deg,#12707F,#0C5160);color:#fff;}
@@ -213,8 +228,8 @@ body.locked .readonly-note{display:block;}
 /* سبليت */
 .m-s{background:linear-gradient(180deg,#FDEBD8,#FAD9B8);color:#9C4A10;}
 /* إجازة */
-.m-o{background:#EFF2F4;color:#8A979F;}
-.m-o .s-tm{font-size:11px;font-weight:800;}
+.m-o{background:linear-gradient(180deg,#D6DEE4 0%,#BECAD2 100%);color:#46585F;}
+.m-o .s-lb{opacity:.8;}
 
 /* ===== تحذير الراحة: شريط رفيع تحت المربع (لا يكسر تناسق الأبعاد) ===== */
 .rest-bar{position:absolute;left:0;right:0;bottom:0;height:6px;z-index:6;pointer-events:none;border-radius:0 0 11px 11px;cursor:help;}
@@ -234,12 +249,9 @@ body.locked .readonly-note{display:block;}
 </style>
 </head>
 <body>
+<button class="fab info" onclick="openInfo()" title="القواعد والمفاتيح">ⓘ</button>
+<button class="fab menu" onclick="openMenu()" title="القائمة">☰</button>
 <div class="wrap">
-  <div class="topbar">
-    <button class="iconbtn" onclick="openMenu()" title="القائمة">☰</button>
-    <button class="iconbtn" id="lockBtn" onclick="adminToggle()" title="صلاحية التعديل">🔒</button>
-    <button class="iconbtn" onclick="openInfo()" title="القواعد والمفاتيح">ⓘ</button>
-  </div>
 
   <div class="hero">
     <div class="hero-inner">
@@ -253,7 +265,7 @@ body.locked .readonly-note{display:block;}
       </div>
       <div class="hero-meta">
         <span class="hero-pill"><span class="pi">🕒</span> جدول الشفتات — تشغيل 24 ساعة</span>
-        <span class="hero-pill purple"><span class="pi">🗓️</span> <span contenteditable="true" id="weekTitle">الأسبوع رقم (3)</span> — <span contenteditable="true">من السبت 5 سبتمبر إلى الجمعة 11 سبتمبر 2026</span></span>
+        <span class="hero-pill purple"><span class="pi">🗓️</span> <span contenteditable="true" id="weekTitle">الأسبوع رقم (2)</span> — <span contenteditable="true">من السبت 5 سبتمبر إلى الجمعة 11 سبتمبر 2026</span></span>
       </div>
     </div>
   </div>
@@ -288,25 +300,21 @@ body.locked .readonly-note{display:block;}
 <div id="syncToast">🔄 تم تحديث الجدول بتعديلات جديدة من الأجهزة الأخرى</div>
 
 <div class="overlay" id="overlay" onclick="closeAll()"></div>
-<div class="modal" id="menuModal">
-  <div class="box">
-    <div class="mh"><h3>القائمة</h3><button onclick="closeAll()">✕</button></div>
-    <div class="mc">
-      <div class="menugrid">
-        <button class="menubtn mb-teal admin-only" onclick="addRow();closeAll()"><span class="ico">➕</span> إضافة موظف</button>
-        <button class="menubtn mb-purp admin-only" onclick="generateRandom()"><span class="ico">🎲</span> توليد سيكل عشوائي</button>
-        <button class="menubtn mb-night" onclick="closeAll();setTimeout(()=>window.print(),120)"><span class="ico">🖨️</span> طباعة / PDF</button>
-        <button class="menubtn mb-dark" onclick="exportExcel()"><span class="ico">📊</span> تصدير Excel</button>
-        <button class="menubtn mb-purp" onclick="exportJSON()"><span class="ico">💾</span> نسخة احتياطية JSON</button>
-        <button class="menubtn mb-dark admin-only" onclick="document.getElementById('fileIn').click()"><span class="ico">📂</span> استيراد نسخة</button>
-        <button class="menubtn mb-ghost admin-only" style="grid-column:1/-1" onclick="resetTable()"><span class="ico">↺</span> استرجاع الجدول الأساسي</button>
-        <button class="menubtn mb-teal" style="grid-column:1/-1" onclick="adminToggle();closeAll()"><span class="ico" id="menuLockIco">🔒</span> <span id="menuLockTxt">دخول المشرف (للتعديل)</span></button>
-      </div>
-      <input type="file" id="fileIn" accept=".json" style="display:none" onchange="importJSON(event)">
-      <div class="cloudcard" style="margin-top:14px"><span id="cloudDot2"></span><span>المزامنة السحابية عبر Supabase — تعديلاتك تُحفظ وتظهر لكل الأجهزة.</span></div>
-    </div>
+<aside class="drawer" id="drawer">
+  <h2>القائمة <button class="x" onclick="closeAll()">✕</button></h2>
+  <div class="body">
+    <button class="menubtn mb-teal admin-only" onclick="addRow();closeAll()"><span class="ico">➕</span> إضافة موظف</button>
+    <button class="menubtn mb-purp admin-only" onclick="generateRandom()"><span class="ico">🎲</span> توليد سيكل عشوائي</button>
+    <button class="menubtn mb-night" onclick="closeAll();setTimeout(()=>window.print(),160)"><span class="ico">🖨️</span> طباعة / PDF</button>
+    <button class="menubtn mb-dark" onclick="exportExcel()"><span class="ico">📊</span> تصدير Excel</button>
+    <button class="menubtn mb-purp" onclick="exportJSON()"><span class="ico">💾</span> نسخة احتياطية JSON</button>
+    <button class="menubtn mb-dark admin-only" onclick="document.getElementById('fileIn').click()"><span class="ico">📂</span> استيراد نسخة</button>
+    <button class="menubtn mb-ghost admin-only" onclick="resetTable()"><span class="ico">↺</span> استرجاع الجدول الأساسي</button>
+    <button class="menubtn mb-teal" id="lockBtn" onclick="adminToggle()"><span class="ico">🔒</span> <span id="lockTxt">دخول المشرف (للتعديل)</span></button>
+    <input type="file" id="fileIn" accept=".json" style="display:none" onchange="importJSON(event)">
+    <div class="cloudcard"><span id="cloudDot2"></span><span>المزامنة السحابية عبر Supabase — تعديلاتك تُحفظ وتظهر لكل الأجهزة.</span></div>
   </div>
-</div>
+</aside>
 
 <div class="modal" id="infoModal">
   <div class="box">
@@ -420,9 +428,9 @@ async function pullCloud(announce){
 setInterval(()=>pullCloud(true),12000);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)pullCloud(true);});
 window.addEventListener("focus",()=>pullCloud(true));
-function openMenu(){document.getElementById("menuModal").classList.add("open");document.getElementById("overlay").classList.add("open");}
+function openMenu(){document.getElementById("drawer").classList.add("open");if(window.innerWidth<921)document.getElementById("overlay").classList.add("open");}
 function openInfo(){document.getElementById("infoModal").classList.add("open");document.getElementById("overlay").classList.add("open");}
-function closeAll(){["drawer","menuModal","infoModal"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove("open");});
+function closeAll(){["drawer","infoModal"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove("open");});
   if(!document.getElementById("dlgModal").classList.contains("open"))document.getElementById("overlay").classList.remove("open");
   document.querySelectorAll(".rowmenu").forEach(m=>m.classList.remove("open"));closeDropdowns();}
 document.addEventListener("click",e=>{if(!e.target.closest(".empcell"))document.querySelectorAll(".rowmenu").forEach(m=>m.classList.remove("open"));});
@@ -517,12 +525,12 @@ const SHIFT_META={
   K:{cls:"m-k",lb:"صباحي",tm:"9 ص – 5 م",ico:"🌤️"},
   G:{cls:"m-g",lb:"صباحي",tm:"10 ص – 6 م",ico:"🌤️"},
   A:{cls:"m-a",lb:"وسط",tm:"11 ص – 7 م",ico:"⛅"},
-  B:{cls:"m-b",lb:"مساء",tm:"1 م – 9 م",ico:"🌇"},
+  B:{cls:"m-b",lb:"مساء",tm:"1 م – 9 م",ico:"🌆"},
   E:{cls:"m-e",lb:"إغلاق",tm:"3 م – 11 م",ico:"🌃"},
   C:{cls:"m-c",lb:"مسائي",tm:"4 م – 12 ص",ico:"🌙"},
   N:{cls:"m-n",lb:"ليلي",tm:"12 ص – 8 ص",ico:"🌙"},
   S:{cls:"m-s",lb:"سبليت",tm:"9 ص – 12 ظ<br>2 م – 7 م",two:true,ico:"🔀"},
-  O:{cls:"m-o",lb:"إجازة",tm:"إجازة",ico:"💤"}
+  O:{cls:"m-o",lb:"راحة",tm:"إجازة",ico:"🌴"}
 };
 function shiftInner(code){
   const m=SHIFT_META[code];
@@ -796,9 +804,9 @@ function importJSON(ev){if(!isAdmin){ev.target.value="";dlgAlert("التعديل
 function applyLock(){
   document.body.classList.toggle("locked",!isAdmin);
   document.querySelectorAll(".hero [contenteditable]").forEach(el=>el.setAttribute("contenteditable",isAdmin?"true":"false"));
-  const lb=document.getElementById("lockBtn");if(lb)lb.textContent=isAdmin?"🔓":"🔒";
-  const mt=document.getElementById("menuLockTxt");if(mt)mt.textContent=isAdmin?"قفل التعديل (خروج المشرف)":"دخول المشرف (للتعديل)";
-  const mi=document.getElementById("menuLockIco");if(mi)mi.textContent=isAdmin?"🔓":"🔒";
+  const lb=document.getElementById("lockBtn");
+  if(lb){lb.querySelector(".ico").textContent=isAdmin?"🔓":"🔒";
+    const lt=document.getElementById("lockTxt");if(lt)lt.textContent=isAdmin?"قفل التعديل (خروج المشرف)":"دخول المشرف (للتعديل)";}
 }
 async function rpcSave(data,pin){
   const r=await fetch(SUPA_URL+"/rest/v1/rpc/save_schedule",{method:"POST",
@@ -821,6 +829,27 @@ async function adminToggle(){
   else{setDot(false);dlgAlert("❌ كود غير صحيح أو تعذّر الاتصال بالخادم. التعديل يظل مقفولاً.");}
 }
 function setDotText(txt){const t=document.getElementById("cloudTxt");if(t)t.textContent=txt;}
+
+/* رقم الأسبوع: محسوب حسب تاريخ بداية الفترة (السبت) ويتحدّث تلقائياً عند تعديل التاريخ */
+function parseFirstDate(txt){
+  const months={"يناير":0,"فبراير":1,"مارس":2,"أبريل":3,"مايو":4,"يونيو":5,"يوليو":6,"أغسطس":7,"سبتمبر":8,"أكتوبر":9,"نوفمبر":10,"ديسمبر":11};
+  const m=txt.match(/(\d{1,2})\s+([أ-ي]+)\s+(\d{4})/);
+  if(!m)return null;
+  const mo=months[m[2].trim()];if(mo===undefined)return null;
+  const d=new Date(+m[3],mo,+m[1]);
+  return isNaN(d)?null:d;
+}
+/* الأسبوع الحالي: السبت 5 سبتمبر 2026 = الأسبوع رقم (2) مرجع */
+function weekOfYear(d){
+  const anchor=new Date(2026,8,5);
+  const weeks=Math.round((d-anchor)/(7*864e5));
+  return 2+weeks;}
+document.querySelectorAll(".hero-pill [contenteditable]").forEach(el=>{
+  el.addEventListener("blur",()=>{
+    const wt=document.getElementById("weekTitle");if(!wt||el===wt)return;
+    const d=parseFirstDate(el.textContent);
+    if(d){const w=weekOfYear(d);wt.textContent="الأسبوع رقم ("+w+")";}
+  });});
 
 /* بدء التشغيل: اعرض المحلي فوراً ثم اجلب السحابة (المرجع الموحّد) */
 applyLock();
