@@ -173,7 +173,7 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
 .sw.O{background:linear-gradient(180deg,#D6DEE4,#BECAD2);color:#46585F;}
 .badgebox{display:inline-flex;align-items:center;gap:8px;font-size:13px;margin:3px 0;}
 @media(max-width:760px){.cards{grid-template-columns:repeat(2,1fr);} body{padding:12px;} .hero{padding:18px 16px 16px;} .hero .logo{height:48px;width:48px;flex-basis:48px;} .hero h1{font-size:16px;} .hero-headrow{gap:12px;} .hero-inner{gap:11px;} .hero-pill{font-size:11px;padding:6px 12px;} .hero .rule{margin-top:6px;}}
-@media print{body{background:#fff;padding:0;} .side-toggle,.cloudline,.tabs,.sidebar,.drawer,.overlay,.modal,.rowmenu,.weekbar{display:none!important;}
+@media print{body{background:#fff;padding:0;} .side-toggle,.cloudline,.tabs,.sidebar,.drawer,.overlay,.modal,.rowmenu,.weekbar,.pubbar{display:none!important;}
   .wrap{margin:0!important;max-width:100%!important;padding-right:0!important;}
   .panel{box-shadow:none;} table{min-width:0;border-spacing:3px;} tr{page-break-inside:avoid;} thead{display:table-header-group;}
   select.s{appearance:none;font-size:9px;} .cell{height:auto;} .more,.rowmenu,.dd-arrow,.dd-menu{display:none!important;} .hero{box-shadow:none;}
@@ -320,8 +320,28 @@ body.locked .readonly-note{display:block;}
 .nwopt .oc{width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:2px solid var(--line);}
 .nwopt.sel .oc{border-color:var(--teal);background:radial-gradient(circle at center,var(--teal) 0 5.5px,#fff 6.5px);}
 .print-week{display:none;}
+/* ===== شريط النشر: المسودة مالهاش ظهور للعالم غير بالضغط على نشر ===== */
+.pubbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  background:linear-gradient(135deg,#FFFCF4,#F7FBFC);border:1px solid #F0E2C4;border-radius:18px;
+  padding:10px 13px;margin:-6px 0 16px;box-shadow:var(--shadow);}
+.pubbar.published{background:#fff;border-color:var(--line);}
+.pub-left{display:flex;align-items:center;gap:11px;min-width:0;}
+.pub-dot{width:12px;height:12px;flex:0 0 12px;border-radius:50%;background:#E0A636;box-shadow:0 0 0 4px rgba(224,166,54,.18);}
+.pub-dot.ok{background:var(--teal);box-shadow:0 0 0 4px rgba(47,179,166,.18);}
+.pub-txt{display:flex;flex-direction:column;align-items:flex-start;min-width:0;text-align:right;}
+.pub-txt b{font-size:13.5px;font-weight:800;color:#8A5B00;line-height:1.4;}
+.pubbar.published .pub-txt b{color:var(--teal-d);}
+.pub-txt span{font-size:11.5px;font-weight:700;color:var(--gray);line-height:1.7;}
+.pub-right{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+.wk-btn:disabled{opacity:1;background:#EAEEF1!important;color:var(--gray2)!important;border-color:transparent!important;
+  box-shadow:none!important;transform:none!important;cursor:default;}
+.pend{display:inline-block;background:#F5A623;color:#fff;border-radius:10px;padding:1px 8px;font-size:11px;font-weight:800;margin-inline-start:6px;}
+.pend.zero{background:rgba(255,255,255,.28);}
 /* موبايل: الشريط يترصّف ولا يكسر عرض الصفحة */
 @media(max-width:980px){.weekbar .wk-g{justify-content:space-between;}}
+ @media(max-width:700px){.pubbar{flex-direction:column;align-items:stretch;gap:10px;}
+  .pub-right{width:100%;}.pub-right .wk-btn{flex:1 1 150px;}
+  .pub-txt{min-width:0;}.pub-txt b,.pub-txt span{white-space:normal;}}
 @media(max-width:700px){
  .weekbar{flex-direction:column;align-items:stretch;gap:10px;padding:10px;}
  .weekbar .wk-g{width:100%;flex-wrap:wrap;}
@@ -387,6 +407,18 @@ body.locked .readonly-note{display:block;}
     </div>
   </div>
 
+  <div class="pubbar admin-only" id="pubbar">
+    <div class="pub-left">
+      <span class="pub-dot" id="pubDot"></span>
+      <div class="pub-txt"><b id="pubTxt">—</b><span id="pubSub">—</span></div>
+    </div>
+    <div class="pub-right">
+      <button class="wk-btn ghost" id="pubAutoBtn" onclick="toggleAuto()">⚪ النشر التلقائي: مقفل</button>
+      <button class="wk-btn ghost" id="pubRevert" onclick="discardDraft()">↺ تراجع عن المسودة</button>
+      <button class="wk-btn primary" id="pubBtn" onclick="publishNow()">📤 <span id="pubLbl">نشر التعديلات</span> <span class="wk-total" id="pubCnt">0</span></button>
+    </div>
+  </div>
+
   <div class="cards">
     <div class="card c1"><div class="n" id="cEmp">—</div><div class="l">موظف وموظفة</div></div>
     <div class="card c2"><div class="n" id="cNight">—</div><div class="l">شيفت ليلي (واحد يومياً)</div></div>
@@ -432,6 +464,9 @@ body.locked .readonly-note{display:block;}
     <button class="side-item si-teal admin-only" onclick="addRow();closeAll()"><span class="ic">➕</span> إضافة موظف <span class="ar">›</span></button>
     <button class="side-item si-purp admin-only" onclick="generateRandom()"><span class="ic">🎲</span> توليد سيكل عشوائي <span class="ar">›</span></button>
     <button class="side-item si-night admin-only" onclick="resetTable()"><span class="ic">↺</span> استرجاع الجدول الأساسي <span class="ar">›</span></button>
+    <div class="side-sec">النشر</div>
+    <button class="side-item si-gold admin-only" onclick="publishNow()"><span class="ic">📤</span> نشر التعديلات <b class="pend zero" id="pendTxt"></b> <span class="ar">›</span></button>
+    <button class="side-item si-teal admin-only" onclick="toggleAuto()"><span class="ic">⚙️</span> <span id="autoTxt" style="flex:1">النشر التلقائي: مقفل</span> <span class="ar">›</span></button>
     <div class="side-sec">مشاركة وتصدير</div>
     <button class="side-item si-teal" onclick="closeAll();setTimeout(()=>window.print(),180)"><span class="ic">🖨️</span> طباعة / PDF <span class="ar">›</span></button>
     <button class="side-item si-gold" onclick="exportExcel()"><span class="ic">📊</span> تصدير Excel <span class="ar">›</span></button>
@@ -441,7 +476,7 @@ body.locked .readonly-note{display:block;}
     <button class="side-item si-rose" id="lockBtn" onclick="adminToggle()"><span class="ic">🔒</span> <span id="lockTxt" style="flex:1;">دخول المشرف (للتعديل)</span> <span class="ar">›</span></button>
     <input type="file" id="fileIn" accept=".json" style="display:none" onchange="importJSON(event)">
   </div>
-  <div class="side-foot"><span id="cloudDot2"></span><span>المزامنة السحابية مفعّلة — تعديلاتك تُحفظ وتظهر لكل الأجهزة.</span></div>
+  <div class="side-foot"><span id="cloudDot2"></span><span id="syncFoot">تعديلاتك بتفضل مسودة على جهازك لحد ما تضغط 📤 نشر.</span></div>
 </aside>
 
 <div class="modal" id="infoModal">
@@ -450,6 +485,12 @@ body.locked .readonly-note{display:block;}
     <div class="mc">
       <h4>🖊️ التعديل</h4>
       اضغط اسم الموظف لتغييره، واختر الفرع أو الشفت من القوائم بحرية كاملة، وزر ⋮ لحذف الموظف. كل التعديلات تُحفظ سحابياً تلقائياً وتظهر فوراً لكل الأجهزة.
+      <h4>📤 المسودة والنشر</h4>
+      أي تعديل بتعمله بيتحفظ على جهازك <b>كمسودة</b> — حد تاني فاتح اللينك بيشوف <b>آخر نسخة منشورة</b> بس.
+      لما تخلص اضغط <b>📤 نشر التعديلات</b> (من شريط النشر فوق أو من القائمة الجانبية) عشان تظهر للجميع.
+      • <b>↺ تراجع عن المسودة:</b> يمسح تعديلاتك غير المنشورة ويرجّعك للمنشور.<br>
+      • <b>⚙️ النشر التلقائي:</b> لو فتحته كل تعديل بينشر فوراً (زي الأول).<br>
+      • النشر بيأثّر على <b>الأسابيع اللي عدّلتها أنت</b> وبس — أسابيع تانية عدّلها زميلك في نفس الوقت بتسيبها زي ما هي.
       <h4>📅 الأسابيع</h4>
       كل أسبوع جدول مستقل. من شريط الأسابيع فوق: أسهم للتنقّل بين الأسابيع، وزر <b>＋ أسبوع جديد</b> ينشئ السبت التالي تلقائياً مع خيار: نسخ قائمة الموظفين فقط، أو تكرار جدول الأسبوع، أو توليد سيكل ذكي. ورقم الأسبوع والتواريخ تُحسب من تاريخ البداية.
       <h4>📋 معايير توزيع اليوم</h4>
@@ -588,7 +629,7 @@ function loadLocal(){try{const s=localStorage.getItem(KEY);if(s){const d=JSON.pa
     const ok=Array.isArray(d)?!!d.length:(d&&Array.isArray(d.weeks)&&d.weeks.length);
     if(ok)return normDoc(d);}}catch(e){}
   return normDoc({weeks:[{start:ANCHOR_ISO,rows:SEED.map(r=>({...r,shifts:[...r.shifts]}))}],active:ANCHOR_ISO});}
-let DOC=loadLocal(), cloudOK=false, dirty=false, pushing=false, cloudSig=null;
+let DOC=loadLocal(), cloudOK=false, cloudSig=null;
 let STATE=[], WKS=null;
 function bindWeek(){WKS=DOC.weeks.find(w=>w.key===DOC.active)||DOC.weeks[0];STATE=WKS.rows;setDates(datesOf(WKS.start));}
 function weekIdx(){return DOC.weeks.indexOf(WKS);}
@@ -609,37 +650,178 @@ function userBusy(){
   if(a&&(a.tagName==="SELECT"||a.tagName==="INPUT"||a.isContentEditable))return true;
   if(document.querySelector(".rowmenu.open,.modal.open,.dropdown.open"))return true;
   return false;}
-async function pushCloud(){
-  saveLocal();
-  if(pushing)return;pushing=true;
-  try{const payload=sigW(DOC);
-    const ok=await rpcSave(cloudDoc(),adminPin);
-    cloudOK=ok;if(ok){cloudSig=payload;dirty=false;}setDot(ok);
-  }catch(e){setDot(false);}finally{pushing=false;}}
-let pushTimer=null;
-function save(){if(!isAdmin)return;dirty=true;clearTimeout(pushTimer);pushTimer=setTimeout(pushCloud,450);}
+/* ============ مسودة + نشر ============
+   أي تعديل بيتحفظ محلياً وبس؛ الظهور للجميع محتاج ضغطة 📤 نشر. */
+const PUBKEY="rawad_pub_v9", AUTOK="rawad_auto_publish_v1";
+let AUTO=false;try{AUTO=localStorage.getItem(AUTOK)==="1";}catch(e){}
+let publishing=false, pendCount=0, pushTimer=null;
+let PUBDOC=loadPub();            // آخر نسخة منشورة (مرجع المقارنة بين المسودة والسحابة)
+function sigRows(rows){return JSON.stringify(norm(rows));}
+function cloneWeeks(weeks){return (weeks||[]).map(w=>({key:w.key,start:w.start,num:w.num,rows:w.rows.map(r=>({name:r.name,br:r.br,f:r.f,shifts:r.shifts.slice()}))}));}
+function loadPub(){try{const v=localStorage.getItem(PUBKEY);if(v){const d=JSON.parse(v);
+    if(d&&Array.isArray(d.weeks))return {weeks:normDoc({weeks:d.weeks}).weeks,ts:d.ts||null};}}catch(e){}return null;}
+function savePub(){try{localStorage.setItem(PUBKEY,JSON.stringify(PUBDOC||{weeks:[],ts:null}));}catch(e){}}
+async function fetchCloudRaw(){
+  const r=await fetch(SUPA_URL+"/rest/v1/schedule?id=eq.1&select=data,updated_at",{headers:SUPA_HDR,cache:"no-store"});
+  if(!r.ok)return undefined;
+  const rows=await r.json();
+  return (rows&&rows.length&&rows[0].data)?rows[0].data:null;}
+/* النشر = أسابيعي المعدّلة + المنشور الجديد من الأجهزة التانية (مفيش طمس شغل) */
+function mergeForPublish(freshRaw){
+  const fresh=(freshRaw===undefined||freshRaw===null)?[]:normDoc(freshRaw).weeks;
+  const pubMap=new Map((PUBDOC?PUBDOC.weeks:[]).map(w=>[w.key,w]));
+  const freshMap=new Map(fresh.map(w=>[w.key,w]));
+  const locMap=new Map(DOC.weeks.map(w=>[w.key,w]));
+  const keys=[];locMap.forEach((v,k)=>keys.push(k));freshMap.forEach((v,k)=>{if(!keys.includes(k))keys.push(k);});pubMap.forEach((v,k)=>{if(!keys.includes(k))keys.push(k);});
+  const weeks=[];
+  keys.forEach(k=>{
+    const l=locMap.get(k),p=pubMap.get(k),f=freshMap.get(k);
+    if(!l){if(f&&!p)weeks.push(f);return;}
+    const touched=!p||sigRows(p.rows)!==sigRows(l.rows);
+    weeks.push(touched?l:(f||l));
+  });
+  weeks.sort((a,b)=>a.start<b.start?-1:1);
+  return {v:2,weeks:weeks.map(w=>({start:w.start,num:w.num,rows:w.rows}))};
+}
+function pendingInfo(){
+  if(!PUBDOC||!PUBDOC.weeks||!PUBDOC.weeks.length){ // مفيش نسخة منشورة: كل اللي عندنا "غير منشور"
+    let all=0;DOC.weeks.forEach(w=>all+=w.rows.length);
+    return {n:all,weeks:DOC.weeks.length,removed:0};}
+  const pub=new Map(PUBDOC.weeks.map(w=>[w.key,w]));
+  const loc=new Map(DOC.weeks.map(w=>[w.key,w]));
+  let n=0,weeks=0,removed=0;
+  loc.forEach((w,k)=>{
+    const p=pub.get(k);
+    if(!p){weeks++;n+=w.rows.length;return;}
+    let d=0;const pm=new Map(p.rows.map(r=>[r.name,r])),lm=new Map(w.rows.map(r=>[r.name,r]));
+    lm.forEach((r,k2)=>{const q=pm.get(k2);
+      if(!q){d++;return;}
+      if(q.br!==r.br)d++;
+      for(let i=0;i<7;i++)if(q.shifts[i]!==r.shifts[i])d++;});
+    pm.forEach((r,k2)=>{if(!lm.has(k2))d++;});
+    if(d){weeks++;n+=d;}
+  });
+  pub.forEach((w,k)=>{if(!loc.has(k)){removed++;weeks++;}});
+  return {n:n,weeks:weeks,removed:removed};
+}
+function refreshPending(){
+  const pi=pendingInfo();pendCount=pi.n;
+  const cnt=document.getElementById("pubCnt");if(cnt)cnt.textContent=pi.n;
+  const btn=document.getElementById("pubBtn");if(btn)btn.disabled=(pi.n===0);
+  const rev=document.getElementById("pubRevert");if(rev)rev.style.display=pi.n?"inline-flex":"none";
+  const bar=document.getElementById("pubbar");if(bar)bar.classList.toggle("published",!pi.n);
+  const dot=document.getElementById("pubDot");if(dot)dot.className="pub-dot"+(pi.n?"":" ok");
+  const t=document.getElementById("pubTxt"),sub=document.getElementById("pubSub");
+  if(t)t.textContent=pi.n?(pi.n+" تعديل غير منشور على جهازك"):"الجدول منشور بالكامل ✅";
+  if(sub)sub.textContent=pi.n
+    ?("محدش شايفهم غيرك"+(pi.weeks>1?(" — في "+pi.weeks+" أسبوع"):"")+(pi.removed?(" · "+pi.removed+" أسبوع محذّف"):"")+" · اضغط 📤 نشر عشان يظهروا للجميع")
+    :(PUBDOC&&PUBDOC.ts?("آخر نشر: "+new Date(PUBDOC.ts).toLocaleTimeString("ar-EG",{hour:"2-digit",minute:"2-digit"})+" — أي تعديل جديد هيتحفظ كمسودة")
+                    :"أول تعديل هيتحفظ عندك كمسودة لحد ما تعمل نشر");
+  const pt=document.getElementById("pendTxt");
+  if(pt){pt.textContent=pi.n?("+"+pi.n):"";pt.classList.toggle("zero",!pi.n);}
+  const ab=document.getElementById("pubAutoBtn");if(ab)ab.textContent=AUTO?"🟢 النشر التلقائي: مفتوح":"⚪ النشر التلقائي: مقفل";
+  const at=document.getElementById("autoTxt");if(at)at.textContent="النشر التلقائي: "+(AUTO?"مفتوح 🟢":"مقفل ⚪");
+}
+async function publishNow(silent){
+  if(!isAdmin){if(!silent)dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return false;}
+  const pi=pendingInfo();
+  if(!pi.n){if(!silent)dlgAlert("مفيش أي تعديل غير منشور — اللي على الإنترنت زي بالظبط ✅");return false;}
+  if(publishing)return false;
+  publishing=true;setDot(cloudOK);
+  const sb=document.getElementById("pubBtn"),sl=document.getElementById("pubLbl");
+  if(sb){sb.disabled=true;}
+  if(sl)sl.textContent="جارٍ النشر… ⏳";
+  try{
+    const fresh=await fetchCloudRaw();
+    const merged=mergeForPublish(fresh);
+    const ok=await rpcSave(merged,adminPin);
+    if(!ok){setDot(false);if(!silent)dlgAlert("❌ فشل النشر — اتأكد من كود المشرف ومن الاتصال.<br>مسودتك على جهازك محفوظة ومش هتضيع.");return false;}
+    PUBDOC={weeks:cloneWeeks(normDoc(merged).weeks),ts:Date.now()};savePub();
+    cloudSig=sigW(PUBDOC);
+    saveLocal();render();setDot(true);
+    if(!silent)dlgAlert("✅ تم النشر — كل الأجهزة بقت تشوف التعديلات ("+pi.n+" تعديل في "+pi.weeks+" أسبوع).");
+    else showToast();
+    return true;
+  }catch(e){setDot(false);if(!silent)dlgAlert("❌ تعذّر النشر (مفيش إنترنت؟) — مسودتك محفوظة.");return false;}
+  finally{publishing=false;if(sl)sl.textContent="نشر التعديلات";refreshPending();setDot(cloudOK);}
+}
+function save(){if(!isAdmin)return;saveLocal();refreshPending();
+  if(AUTO){clearTimeout(pushTimer);pushTimer=setTimeout(()=>publishNow(true),600);}}
+function toggleAuto(){
+  AUTO=!AUTO;try{localStorage.setItem(AUTOK,AUTO?"1":"0");}catch(e){}
+  refreshPending();
+  if(AUTO&&pendingInfo().n){publishNow(true);setDot(cloudOK);return;}
+  setDot(cloudOK);
+  dlgAlert(AUTO?"🟢 النشر التلقائي مفتوح — كل تعديل هيظهر لكل الأجهزة فوراً.":"⚪ النشر التلقائي مقفل — تعديلاتك هتفضل <b>مسودة</b> لحد ما تضغط 📤 نشر.");
+}
+function discardDraft(){
+  openDlg("تأكيد المسودة",
+    "التراجع هيمسح تعديلاتك غير المنشورة (<b>"+pendCount+"</b>) ويرجّعك لآخر نسخة منشورة على جهازك.<br>اللي منشور على الإنترنت مش بيتغيّر.",
+    "confirm").then(yes=>{
+    if(!yes)return;
+    if(!PUBDOC||!PUBDOC.weeks.length){dlgAlert("مفيش نسخة منشورة محفوظة على الجهاز ده.");return;}
+    DOC={v:2,weeks:PUBDOC.weeks.map(w=>({key:w.key,start:w.start,num:w.num,rows:w.rows.map(r=>({...r,shifts:[...r.shifts]}))})),active:DOC.active};
+    if(!DOC.weeks.some(w=>w.key===DOC.active))DOC.active=pickBestKey(DOC.weeks);
+    saveLocal();bindWeek();render();dlgAlert("↺ رجعت لآخر نسخة منشورة.");});
+}
 function setDot(ok){cloudOK=ok;["cloudDot","cloudDot2"].forEach(id=>{const el=document.getElementById(id);if(el)el.style.background=ok?"#2FB3A6":"#E0A636";});
-  const t=document.getElementById("cloudTxt");if(t)t.textContent=ok?"متصل ومتزامن — تعديلاتك وتعديلات الفريق تظهر فوراً لكل الأجهزة":"يعمل بالحفظ المحلي مؤقتاً (سيتزامن عند عودة الاتصال).";}
+  const t=document.getElementById("cloudTxt");if(!t)return;
+  if(!ok){t.textContent="مفيش اتصال بالسيرفر — تعديلاتك بتتحفظ على الجهاز وهتقدر تنشرها لما الشبكة ترجع.";return;}
+  const pi=pendingInfo();
+  t.textContent=AUTO?"متصل — النشر التلقائي مفتوح: كل تعديل بيظهر للجميع فوراً"
+    :(pi.n?("متصل — عندك "+pi.n+" تعديل غير منشور؛ اللي بيفتح اللينك بيشوف آخر نسخة منشورة")
+          :"متصل — كل حاجة منشورة، مفيش تعديلات معلّقة");
+  const f=document.getElementById("syncFoot");
+  if(f)f.textContent=AUTO?"النشر التلقائي مفتوح — تعديلاتك تظهر لكل الأجهزة فوراً.":"تعديلاتك بتفضل مسودة على جهازك لحد ما تضغط 📤 نشر.";}
 let toastTimer=null;
 function showToast(){const el=document.getElementById("syncToast");if(!el)return;el.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),3500);}
+function adoptAll(raw){
+  const nd=normDoc(raw);DOC={v:2,weeks:cloneWeeks(nd.weeks),active:nd.active};
+  PUBDOC={weeks:cloneWeeks(nd.weeks),ts:PUBDOC?PUBDOC.ts:null};savePub();
+  saveLocal();bindWeek();}
+/* تحديثات الأجهزة التانية: أسابيعي المعدّلة بتفضل مسودتي، والباقي بياخد المنشور */
+function adoptMerge(raw){
+  const nd=normDoc(raw);
+  const snap=new Map((PUBDOC?PUBDOC.weeks:[]).map(w=>[w.key,w]));
+  const loc=new Map(DOC.weeks.map(w=>[w.key,w]));
+  const cloud=new Map(nd.weeks.map(w=>[w.key,w]));
+  const before=sigW(DOC);
+  const out=[];
+  nd.weeks.forEach(w=>{
+    const l=loc.get(w.key),p=snap.get(w.key);
+    if(!l){out.push(w);return;}
+    const mineTouched=!p||sigRows(p.rows)!==sigRows(l.rows);
+    out.push(mineTouched?l:w);
+  });
+  DOC.weeks.forEach(w=>{
+    if(cloud.has(w.key))return;
+    const p=snap.get(w.key);
+    if(p&&sigRows(p.rows)===sigRows(w.rows)){changed=true;return;} // محذوف من المنشور وأنا ملوّحتش فيه
+    out.push(w);                                                    // أسبوع جديد عندي (مسودة)
+  });
+  const act=cloud.has(DOC.active)?DOC.active:(out.some(w=>w.key===DOC.active)?DOC.active:pickBestKey(out));
+  DOC={v:2,weeks:out.sort((a,b)=>a.start<b.start?-1:1),active:act};
+  PUBDOC={weeks:cloneWeeks(nd.weeks),ts:PUBDOC?PUBDOC.ts:null};savePub();
+  saveLocal();bindWeek();
+  return sigW(DOC)!==before;}
 async function pullCloud(announce){
-  if(pushing||userBusy())return;
-  try{const r=await fetch(SUPA_URL+"/rest/v1/schedule?id=eq.1&select=data,updated_at",{headers:SUPA_HDR,cache:"no-store"});
-    if(!r.ok){setDot(false);return;}
-    const rows=await r.json();
-    let raw=rows&&rows.length&&rows[0].data?rows[0].data:null;
+  if(publishing||userBusy())return;
+  try{
+    const raw=await fetchCloudRaw();
+    if(raw===undefined){setDot(false);return;}
     const has=raw&&(Array.isArray(raw)?raw.length:(Array.isArray(raw.weeks)&&raw.weeks.length));
     setDot(true);
-    if(!has){ // السحابة فاضية
-      if(!cloudSig&&isAdmin){await pushCloud();}
-      return;}
+    if(!has){ if(!PUBDOC&&isAdmin){await publishNow(true);} return;}
     const s=sigW(raw);
-    if(cloudSig===null){ // أول تحميل: السحابة هي المرجع دائماً
-      cloudSig=s;applyDoc(raw);render();return;}
-    if(s!==cloudSig&&!dirty){ // تغيير من جهاز آخر (ليس تعديلاً محلياً غير مرفوع)
-      const changed=s!==sigW(DOC);
-      cloudSig=s;applyDoc(raw);
-      if(changed){render();if(announce)showToast();}}
+    if(cloudSig===null){ // أول تحميل: المنشور هو المرجع، مع الحفاظ على مسودتي لو فيها شغل
+      cloudSig=s;
+      if(PUBDOC&&PUBDOC.weeks&&PUBDOC.weeks.length)adoptMerge(raw);else adoptAll(raw);
+      render();return;}
+    if(s!==cloudSig){
+      cloudSig=s;
+      const ch=adoptMerge(raw);
+      if(ch){render();if(announce)showToast();}
+      else refreshPending();}
   }catch(e){setDot(false);}}
 setInterval(()=>pullCloud(true),12000);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)pullCloud(true);});
@@ -797,7 +979,7 @@ function setView(v,btn){VIEW=v;document.querySelectorAll(".tab").forEach(t=>t.cl
 window.addEventListener("beforeprint",()=>{if(VIEW!=="all"){VIEW="all";render();}});
 window.addEventListener("afterprint",()=>{render();});
 function render(){
-  applyLock();renderWeekbar();
+  applyLock();renderWeekbar();refreshPending();
   head();const tb=document.getElementById("tb");tb.innerHTML="";
   const idxs=viewRows();
   const rowHtml=ri=>{const row=STATE[ri];
@@ -1051,8 +1233,16 @@ async function adminToggle(){
   if(v===null)return;
   const pin=v.trim();if(!pin)return;
   setDotText("🔐 جارٍ التحقق من كود المشرف…");
-  const ok=await rpcSave(cloudDoc(),pin); // تحقّق من الكود بمحاولة حفظ فعلية عبر السيرفر
-  if(ok){isAdmin=true;adminPin=pin;try{sessionStorage.setItem(ADMIN_KEY,pin);}catch(e){}applyLock();render();setDot(true);dlgAlert("✅ تم تفعيل وضع المشرف — يمكنك التعديل الآن.");}
+  let cur;try{cur=await fetchCloudRaw();}catch(e){cur=undefined;}
+  if(cur===undefined){setDot(false);dlgAlert("❌ تعذّر الاتصال بالسيرفر — جرّب تاني.");return;}
+  const empty=!cur||(Array.isArray(cur)?!cur.length:!(cur.weeks&&cur.weeks.length));
+  // نتحقّق من الكود بإعادة كتابة "المنشور" كما هو — مسودتنا ما بتننشرش هنا
+  const ok=await rpcSave(empty?cloudDoc():cur,pin);
+  if(ok){isAdmin=true;adminPin=pin;try{sessionStorage.setItem(ADMIN_KEY,pin);}catch(e){}
+    if(empty){PUBDOC={weeks:normDoc(cloudDoc()).weeks,ts:Date.now()};savePub();cloudSig=sigW(PUBDOC);}
+    else{PUBDOC={weeks:normDoc(cur).weeks,ts:PUBDOC?PUBDOC.ts:null};savePub();cloudSig=sigW(cur);}
+    applyLock();render();setDot(true);
+    dlgAlert("✅ تم تفعيل وضع المشرف — تعديلاتك هتتحوّل <b>مسودة</b>، واضغط 📤 نشر لما تخلص.");}
   else{setDot(false);dlgAlert("❌ كود غير صحيح أو تعذّر الاتصال بالخادم. التعديل يظل مقفولاً.");}
 }
 function setDotText(txt){const t=document.getElementById("cloudTxt");if(t)t.textContent=txt;}
@@ -1083,7 +1273,7 @@ function renderWeekbar(){
   if(pw)pw.textContent="جدول الشفتات — الأسبوع رقم ("+w.num+") — "+rangeOf(w.start);
 }
 function switchWeek(key){
-  if(dirty)pushCloud();
+  if(AUTO&&pendingInfo().n)publishNow(true);
   if(!DOC.weeks.some(w=>w.key===key)){return;}
   DOC.active=key;saveLocal();bindWeek();closeAll();render();
 }
