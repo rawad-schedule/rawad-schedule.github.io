@@ -68,7 +68,7 @@ h1,h2,h3,h4{font-weight:800;}
 .hero::before{content:"";position:absolute;top:0;left:0;right:0;height:6px;
   background:linear-gradient(90deg,#2FB3A6 0%,#0C5160 45%,#6E6EB8 100%);}
 .hero-inner{position:relative;display:flex;flex-direction:column;gap:14px;}
-.hero-headrow{display:flex;align-items:center;gap:16px;}
+.hero-headrow{display:flex;align-items:center;gap:16px;padding-inline-start:104px;}
 .hero .logo{height:62px;width:62px;flex:0 0 62px;background:#fff;border:1px solid var(--line);border-radius:16px;
   padding:8px;object-fit:contain;box-shadow:0 8px 22px rgba(12,81,96,.14);}
 .hero-titles{flex:1;min-width:0;}
@@ -173,7 +173,7 @@ tfoot th.lbl{text-align:right;padding-right:13px;font-weight:800;}
 .sw.O{background:linear-gradient(180deg,#D6DEE4,#BECAD2);color:#46585F;}
 .badgebox{display:inline-flex;align-items:center;gap:8px;font-size:13px;margin:3px 0;}
 @media(max-width:760px){.cards{grid-template-columns:repeat(2,1fr);} body{padding:12px;} .hero{padding:18px 16px 16px;} .hero .logo{height:48px;width:48px;flex-basis:48px;} .hero h1{font-size:16px;} .hero-headrow{gap:12px;} .hero-inner{gap:11px;} .hero-pill{font-size:11px;padding:6px 12px;} .hero .rule{margin-top:6px;}}
-@media print{body{background:#fff;padding:0;} .side-toggle,.cloudline,.tabs,.sidebar,.drawer,.overlay,.modal,.rowmenu{display:none!important;}
+@media print{body{background:#fff;padding:0;} .side-toggle,.cloudline,.tabs,.sidebar,.drawer,.overlay,.modal,.rowmenu,.weekbar{display:none!important;}
   .wrap{margin:0!important;max-width:100%!important;padding-right:0!important;}
   .panel{box-shadow:none;} table{min-width:0;border-spacing:3px;} tr{page-break-inside:avoid;} thead{display:table-header-group;}
   select.s{appearance:none;font-size:9px;} .cell{height:auto;} .more,.rowmenu,.dd-arrow,.dd-menu{display:none!important;} .hero{box-shadow:none;}
@@ -259,6 +259,83 @@ body.locked .readonly-note{display:block;}
 .cell:has(.rest-bar.red)::after{color:#FF5A4D;}
 .cell:has(.rest-bar.warn)::after{color:#E8930C;}
 
+/* ===== شريط الأسابيع: تنقّل + إضافة أسبوع ===== */
+.weekbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  background:#fff;border:1px solid var(--line);border-radius:18px;padding:11px 13px;margin:0 0 16px;box-shadow:var(--shadow);}
+.wk-g{display:flex;align-items:center;gap:9px;min-width:0;}
+.wk-arrow{width:42px;height:42px;flex:0 0 42px;border-radius:13px;border:1px solid var(--line);background:#fff;color:var(--teal-d);
+  font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;line-height:1;display:flex;align-items:center;justify-content:center;transition:.18s;}
+.wk-arrow:hover:not(:disabled){background:var(--teal-soft);border-color:var(--teal-line);}
+.wk-arrow:disabled{opacity:.3;cursor:default;}
+.wk-cur{display:flex;align-items:center;gap:11px;background:linear-gradient(135deg,#F6FAFB,#F4F3FC);border:1px solid var(--line);
+  border-radius:14px;padding:5px 13px;height:42px;cursor:pointer;font-family:inherit;transition:.18s;}
+.wk-cur:hover{border-color:var(--teal-line);box-shadow:0 6px 18px rgba(12,81,96,.12);}
+.wk-num{background:linear-gradient(135deg,#0C5160,#2FB3A6);color:#fff;border-radius:10px;padding:5px 11px;font-size:12.5px;font-weight:800;white-space:nowrap;}
+.wk-txt{display:flex;flex-direction:column;align-items:flex-start;text-align:right;}
+.wk-txt b{font-size:12.5px;font-weight:800;color:var(--teal-d);white-space:nowrap;}
+.wk-txt span{font-size:11px;font-weight:700;color:var(--gray);white-space:nowrap;}
+.wk-chev{font-size:10px;color:var(--gray2);}
+.wk-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:42px;padding:0 16px;border-radius:13px;
+  font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--teal-d);
+  transition:.18s;white-space:nowrap;}
+.wk-btn:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(12,81,96,.14);}
+.wk-btn.primary{background:linear-gradient(135deg,#0C5160,#2FB3A6);color:#fff;border-color:transparent;}
+.wk-btn.purp{background:linear-gradient(135deg,#6E6EB8,#4F4F9E);color:#fff;border-color:transparent;}
+.wk-btn.ghost{color:var(--gray);}
+.wk-btn.danger{color:#C0392B;border-color:#F2C9C4;background:#FFF6F5;}
+.wk-total{background:var(--off);color:var(--gray);border-radius:20px;font-size:11px;padding:2px 9px;font-weight:800;}
+/* نافذة قائمة الأسابيع */
+.wkbox{max-width:620px;}
+.wklist{display:flex;flex-direction:column;gap:9px;max-height:min(52vh,430px);overflow-y:auto;padding:2px;margin:2px 0 14px;}
+.wk-item{display:flex;align-items:center;gap:12px;width:100%;text-align:right;border:1.5px solid var(--line);background:#fff;
+  border-radius:14px;padding:11px 13px;cursor:pointer;font-family:inherit;transition:.18s;}
+.wk-item:hover{border-color:var(--teal-line);background:#FAFDFD;}
+.wk-item.active{border-color:var(--teal);background:linear-gradient(135deg,#F1FAF9,#F3F2FC);box-shadow:0 8px 20px rgba(12,81,96,.1);}
+.wk-item .wn{width:44px;height:44px;flex:0 0 44px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#6E6EB8,#4F4F9E);color:#fff;font-size:17px;font-weight:800;}
+.wk-item.active .wn{background:linear-gradient(135deg,#0C5160,#2FB3A6);}
+.wk-item .wt{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px;}
+.wk-item .wt b{font-size:13px;font-weight:800;color:var(--teal-d);}
+.wk-item .wt span{font-size:11.5px;font-weight:700;color:var(--gray);}
+.wk-item .wtag{font-size:11px;font-weight:800;border-radius:9px;padding:4px 9px;background:var(--teal-soft);color:var(--teal-d);white-space:nowrap;}
+.wk-item .wtag.off{background:var(--off);color:var(--gray2);}
+.wkfoot{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-start;border-top:1px solid var(--line);padding-top:13px;}
+.wkhint{font-size:11.5px;font-weight:700;color:var(--gray);margin-top:11px;line-height:1.85;}
+/* نافذة الأسبوع الجديد */
+.nwd-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(135deg,#F6FAFB,#F4F3FC);
+  border:1px solid var(--line);border-radius:15px;padding:9px 11px;margin-bottom:13px;}
+.nwd-row .lb{font-size:11.5px;font-weight:800;color:var(--gray);}
+.nwd-date{display:flex;flex-direction:column;align-items:center;min-width:230px;}
+.nwd-date b{font-size:13.5px;font-weight:800;color:var(--teal-d);white-space:nowrap;}
+.nwd-date span{font-size:11.5px;font-weight:800;color:var(--purple-d);margin-top:3px;}
+.nwopts{display:flex;flex-direction:column;gap:9px;margin-bottom:4px;}
+.nwopt{display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);border-radius:14px;padding:10px 12px;cursor:pointer;
+  background:#fff;font-family:inherit;text-align:right;width:100%;transition:.18s;}
+.nwopt:hover{border-color:var(--teal-line);}
+.nwopt.sel{border-color:var(--teal);background:linear-gradient(135deg,#F1FAF9,#F5F4FD);box-shadow:0 8px 20px rgba(12,81,96,.1);}
+.nwopt .oi{width:42px;height:42px;flex:0 0 42px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:19px;background:var(--teal-soft);}
+.nwopt .ot{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px;}
+.nwopt .ot b{font-size:13px;font-weight:800;color:var(--teal-d);}
+.nwopt .ot span{font-size:11.5px;font-weight:600;color:var(--gray);line-height:1.6;}
+.nwopt .oc{width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:2px solid var(--line);}
+.nwopt.sel .oc{border-color:var(--teal);background:radial-gradient(circle at center,var(--teal) 0 5.5px,#fff 6.5px);}
+.print-week{display:none;}
+/* موبايل: الشريط يترصّف ولا يكسر عرض الصفحة */
+@media(max-width:980px){.weekbar .wk-g{justify-content:space-between;}}
+@media(max-width:700px){
+ .weekbar{flex-direction:column;align-items:stretch;gap:10px;padding:10px;}
+ .weekbar .wk-g{width:100%;flex-wrap:wrap;}
+ .wk-cur{flex:1 1 200px;min-width:0;height:auto;min-height:44px;padding:8px 12px;flex-direction:column;align-items:stretch;gap:4px;}
+ .wk-cur .wk-num{align-self:center;}
+ .wk-chev{display:none;}
+ .wk-txt{min-width:0;flex:1 1 auto;flex-direction:row;flex-wrap:wrap;gap:3px 9px;align-items:center;}
+ .wk-txt b,.wk-txt span{white-space:normal;line-height:1.4;font-size:11.5px;}
+ .wk-btn{flex:1 1 145px;}
+ .wk-arrow{width:40px;height:40px;flex:0 0 40px;}
+}
+@media print{.print-week{display:block;text-align:center;font-size:13.5px;font-weight:800;color:#0C5160;margin:0 0 9px;}}
+
+
 /* ===== نوافذ تنبيه/تأكيد/إدخال مخصصة ===== */
 .dlgbox{max-width:440px;}
 .dlg-input{width:100%;margin-top:14px;font-family:inherit;font-size:16px;font-weight:700;text-align:center;direction:ltr;
@@ -288,8 +365,25 @@ body.locked .readonly-note{display:block;}
       </div>
       <div class="hero-meta">
         <span class="hero-pill"><span class="pi">🕒</span> جدول الشفتات — تشغيل 24 ساعة</span>
-        <span class="hero-pill purple"><span class="pi">🗓️</span> <span contenteditable="true" id="weekTitle">الأسبوع رقم (2)</span> — <span contenteditable="true">من السبت 5 سبتمبر إلى الجمعة 11 سبتمبر 2026</span></span>
+        <span class="hero-pill purple" style="cursor:pointer" onclick="openWeeks()"><span class="pi">🗂️</span> <span id="heroWeekCount">أسبوع واحد محفوظ</span></span>
       </div>
+    </div>
+  </div>
+
+  <div class="weekbar" id="weekbar">
+    <div class="wk-g">
+      <button class="wk-arrow" id="wkPrev" onclick="stepWeek(-1)" title="الأسبوع الأقدم">&rarr;</button>
+      <button class="wk-cur" onclick="openWeeks()" title="كل الأسابيع">
+        <span class="wk-num" id="wkNum">الأسبوع رقم (2)</span>
+        <span class="wk-txt"><b id="wkRange">—</b><span id="wkStaff">—</span></span>
+        <span class="wk-chev">▾</span>
+      </button>
+      <button class="wk-arrow" id="wkNext" onclick="stepWeek(1)" title="الأسبوع الأحدث">&larr;</button>
+    </div>
+    <div class="wk-g">
+      <button class="wk-btn ghost" id="wkJump" onclick="jumpToCurrent()" title="انتقل لأسبوع اليوم">📍 هذا الأسبوع</button>
+      <button class="wk-btn purp" onclick="openWeeks()">🗂️ كل الأسابيع <span class="wk-total" id="wkTotal">1</span></button>
+      <button class="wk-btn primary admin-only" onclick="newWeekDialog()">＋ أسبوع جديد</button>
     </div>
   </div>
 
@@ -311,6 +405,7 @@ body.locked .readonly-note{display:block;}
   </div>
 
   <div class="panel">
+    <div class="print-week" id="printWeek"></div>
     <table id="tbl">
       <thead><tr id="headRow"></tr></thead>
       <tbody id="tb"></tbody>
@@ -330,6 +425,9 @@ body.locked .readonly-note{display:block;}
     <button class="side-x" onclick="closeAll()" title="إغلاق">✕</button>
   </div>
   <div class="side-body">
+    <div class="side-sec">الأسابيع</div>
+    <button class="side-item si-purp" onclick="closeAll();setTimeout(openWeeks,160)"><span class="ic">🗂️</span> كل الأسابيع <span class="ar">›</span></button>
+    <button class="side-item si-teal admin-only" onclick="newWeekDialog()"><span class="ic">📅</span> إضافة أسبوع جديد <span class="ar">›</span></button>
     <div class="side-sec">إدارة الجدول</div>
     <button class="side-item si-teal admin-only" onclick="addRow();closeAll()"><span class="ic">➕</span> إضافة موظف <span class="ar">›</span></button>
     <button class="side-item si-purp admin-only" onclick="generateRandom()"><span class="ic">🎲</span> توليد سيكل عشوائي <span class="ar">›</span></button>
@@ -352,6 +450,8 @@ body.locked .readonly-note{display:block;}
     <div class="mc">
       <h4>🖊️ التعديل</h4>
       اضغط اسم الموظف لتغييره، واختر الفرع أو الشفت من القوائم بحرية كاملة، وزر ⋮ لحذف الموظف. كل التعديلات تُحفظ سحابياً تلقائياً وتظهر فوراً لكل الأجهزة.
+      <h4>📅 الأسابيع</h4>
+      كل أسبوع جدول مستقل. من شريط الأسابيع فوق: أسهم للتنقّل بين الأسابيع، وزر <b>＋ أسبوع جديد</b> ينشئ السبت التالي تلقائياً مع خيار: نسخ قائمة الموظفين فقط، أو تكرار جدول الأسبوع، أو توليد سيكل ذكي. ورقم الأسبوع والتواريخ تُحسب من تاريخ البداية.
       <h4>📋 معايير توزيع اليوم</h4>
       • <b>الافتتاح الصباحي (8ص–4م):</b> موظف واحد فقط من جدة + موظف واحد فقط من الطائف.<br>
       • <b>الليلي (12ص–8ص):</b> شخص واحد فقط يومياً (أي فرع عدا مصر، والأفضل من جدة)، واليوم التالي إجازة.<br>
@@ -389,6 +489,44 @@ body.locked .readonly-note{display:block;}
   </div>
 </div>
 
+<div class="modal" id="weeksModal">
+  <div class="box dlgbox wkbox">
+    <div class="mh"><h3>🗂️ الأسابيع المحفوظة</h3><button onclick="closeAll()">✕</button></div>
+    <div class="mc">
+      <div class="wklist" id="wkList"></div>
+      <div class="wkfoot">
+        <button class="wk-btn primary admin-only" onclick="newWeekDialog()">＋ أسبوع جديد</button>
+        <button class="wk-btn ghost admin-only" onclick="editWeekDate()">✎ بداية هذا الأسبوع</button>
+        <button class="wk-btn ghost admin-only" onclick="syncRoster()">🧩 توحيد قائمة الموظفين</button>
+        <button class="wk-btn danger admin-only" id="wkDelBtn" onclick="deleteWeek()">🗑 حذف هذا الأسبوع</button>
+      </div>
+      <div class="wkhint">كل أسبوع جدول مستقل (موظفوه وشفتاته) ومحفوظ سحابياً — الأسبوع المعروض عندك لا يتغيّر عند بقية الأجهزة. للتنقّل السريع: <b>Alt + ←/→</b> أو سهما شريط الأسابيع.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="newWeekModal">
+  <div class="box dlgbox wkbox">
+    <div class="mh"><h3 id="nwdTitle">📅 إضافة أسبوع جديد</h3><button onclick="closeAll()">✕</button></div>
+    <div class="mc">
+      <div class="nwd-row">
+        <span class="lb">بداية الأسبوع (السبت)</span>
+        <div class="wk-g">
+          <button class="wk-arrow" onclick="nwdStep(-7)" title="أسبوع قبل">&rarr;</button>
+          <span class="nwd-date"><b id="nwdDate">—</b><span id="nwdNum">—</span></span>
+          <button class="wk-arrow" onclick="nwdStep(7)" title="أسبوع بعد">&larr;</button>
+        </div>
+      </div>
+      <div class="nwopts" id="nwopts"></div>
+      <div class="wkhint" id="nwdHint" style="margin:10px 0 0"></div>
+      <div class="dlg-actions">
+        <button class="dlg-btn primary" id="nwdOk" onclick="confirmNewWeek()">إنشاء الأسبوع</button>
+        <button class="dlg-btn ghost" onclick="closeAll()">إلغاء</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="dlgModal">
   <div class="box dlgbox">
     <div class="mh"><h3 id="dlgTitle">تنبيه</h3><button onclick="resolveDlg(null)">✕</button></div>
@@ -413,11 +551,58 @@ const SUPA_URL="https://dpfmbcqluhonydvfkhwh.supabase.co";
 const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRwZm1iY3FsdWhvbnlkdmZraHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcyNzIzNDgsImV4cCI6MjEwMjg0ODM0OH0.w4k0bgjF2rkhLDzr4-XBbxTA6KqQe-JNpXK7UzrBB4M";
 const SUPA_HDR={"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"application/json"};
 /* ============ المزامنة: السحابة مصدر موحّد لكل الأجهزة ============ */
-let STATE=loadLocal(), cloudOK=false, dirty=false, pushing=false, cloudSig=null;
+/* ============ الأسابيع: تواريخ ومساعدات ============ */
+const AR_MONTHS=["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+const AR_DAYS=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+const ANCHOR_SAT=new Date(2026,8,5);            // السبت 5 سبتمبر 2026 = الأسبوع رقم (2)
+function pad2(n){return (n<10?"0":"")+n;}
+function isoOf(d){return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());}
+const ANCHOR_ISO=isoOf(ANCHOR_SAT);
+function dateOf(s){const p=String(s||"").split("-").map(Number);const d=new Date(p[0],(p[1]||1)-1,p[2]||1);return isNaN(d.getTime())?new Date(ANCHOR_SAT):d;}
+function addDays(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);}
+function weekNumOf(k){return 2+Math.round((dateOf(k)-ANCHOR_SAT)/(7*864e5));}
+function fmtD(d){return d.getDate()+" "+AR_MONTHS[d.getMonth()]+" "+d.getFullYear();}
+function fmtDay(d){return AR_DAYS[d.getDay()]+" "+d.getDate()+" "+AR_MONTHS[d.getMonth()];}
+function datesOf(k){const st=dateOf(k);return Array.from({length:7},(_,i)=>fmtD(addDays(st,i)));}
+function rangeOf(k){const st=dateOf(k),e=addDays(st,6);
+  return st.getFullYear()===e.getFullYear()
+    ? "من "+fmtDay(st)+" إلى "+fmtDay(e)+" "+e.getFullYear()
+    : "من "+fmtDay(st)+" "+st.getFullYear()+" إلى "+fmtDay(e)+" "+e.getFullYear();}
+function setDates(arr){DATES.length=0;for(let i=0;i<arr.length;i++)DATES.push(arr[i]);}
+/* ===== مستند الجدول = {كل الأسابيع + الأسبوع المعروض محلياً} ===== */
+function normWeek(w){const k=isoOf(dateOf((w&&w.start)?String(w.start):ANCHOR_ISO));
+  return {key:k,start:k,num:weekNumOf(k),rows:norm(w&&w.rows)};}
+function pickBestKey(weeks){const today=isoOf(new Date());
+  const hit=weeks.find(w=>today>=w.start&&today<=isoOf(addDays(dateOf(w.start),6)));
+  return hit?hit.key:weeks[weeks.length-1].key;}
+function normDoc(raw){let weeks;
+  if(Array.isArray(raw))weeks=[{start:ANCHOR_ISO,rows:raw}];
+  else if(raw&&Array.isArray(raw.weeks)&&raw.weeks.length)weeks=raw.weeks;
+  else weeks=[{start:ANCHOR_ISO,rows:SEED.map(r=>({...r,shifts:[...r.shifts]}))}];
+  const out=weeks.map(normWeek);const seen=new Set();
+  const uniq=out.filter(w=>{if(seen.has(w.key))return false;seen.add(w.key);return true;}).sort((a,b)=>a.start<b.start?-1:1);
+  let act=(raw&&!Array.isArray(raw)&&raw.active)?String(raw.active):"";
+  if(!uniq.some(w=>w.key===act))act=pickBestKey(uniq);
+  return {v:2,weeks:uniq,active:act};}
+function loadLocal(){try{const s=localStorage.getItem(KEY);if(s){const d=JSON.parse(s);
+    const ok=Array.isArray(d)?!!d.length:(d&&Array.isArray(d.weeks)&&d.weeks.length);
+    if(ok)return normDoc(d);}}catch(e){}
+  return normDoc({weeks:[{start:ANCHOR_ISO,rows:SEED.map(r=>({...r,shifts:[...r.shifts]}))}],active:ANCHOR_ISO});}
+let DOC=loadLocal(), cloudOK=false, dirty=false, pushing=false, cloudSig=null;
+let STATE=[], WKS=null;
+function bindWeek(){WKS=DOC.weeks.find(w=>w.key===DOC.active)||DOC.weeks[0];STATE=WKS.rows;setDates(datesOf(WKS.start));}
+function weekIdx(){return DOC.weeks.indexOf(WKS);}
+function setRows(rows){WKS.rows=rows;STATE=rows;}
+function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(DOC));}catch(e){}}
+/* السحابة تحمل كل الأسابيع، لكن الأسبوع المعروض تفضيل محلي لكل جهاز */
+function cloudDoc(){return {v:2,weeks:DOC.weeks.map(w=>({start:w.start,num:w.num,rows:w.rows}))};}
+function sigW(d){return JSON.stringify(normDoc(d).weeks);}
+function warnCount(w){let c=0;w.rows.forEach(r=>{for(let i=1;i<7;i++)if(restWarnFor(r,i))c++;});return c;}
+function applyDoc(raw){const act=DOC.active;const nd=normDoc(raw);
+  DOC={v:2,weeks:nd.weeks,active:(nd.weeks.some(w=>w.key===act)?act:nd.active)};
+  saveLocal();bindWeek();}
+
 function norm(d){return (Array.isArray(d)?d:[]).map(r=>({name:r.name||"بدون اسم",br:r.br||"جده",f:r.f?1:0,shifts:Array.isArray(r.shifts)&&r.shifts.length===7?r.shifts:["O","O","O","O","O","O","O"]}));}
-function sig(d){return JSON.stringify(norm(d));}
-function loadLocal(){try{const s=localStorage.getItem(KEY);if(s){const d=JSON.parse(s);if(Array.isArray(d)&&d.length)return norm(d);}}catch(e){}return SEED.map(r=>({...r,shifts:[...r.shifts]}));}
-function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(STATE));}catch(e){}}
 /* هل المستخدم مشغول بتعديل الآن؟ (لا نقاطع أثناء الكتابة/فتح القوائم) */
 function userBusy(){
   const a=document.activeElement;
@@ -427,8 +612,8 @@ function userBusy(){
 async function pushCloud(){
   saveLocal();
   if(pushing)return;pushing=true;
-  try{const payload=sig(STATE);
-    const ok=await rpcSave(STATE,adminPin);
+  try{const payload=sigW(DOC);
+    const ok=await rpcSave(cloudDoc(),adminPin);
     cloudOK=ok;if(ok){cloudSig=payload;dirty=false;}setDot(ok);
   }catch(e){setDot(false);}finally{pushing=false;}}
 let pushTimer=null;
@@ -442,17 +627,18 @@ async function pullCloud(announce){
   try{const r=await fetch(SUPA_URL+"/rest/v1/schedule?id=eq.1&select=data,updated_at",{headers:SUPA_HDR,cache:"no-store"});
     if(!r.ok){setDot(false);return;}
     const rows=await r.json();
-    let data=rows&&rows.length&&Array.isArray(rows[0].data)&&rows[0].data.length?norm(rows[0].data):null;
+    let raw=rows&&rows.length&&rows[0].data?rows[0].data:null;
+    const has=raw&&(Array.isArray(raw)?raw.length:(Array.isArray(raw.weeks)&&raw.weeks.length));
     setDot(true);
-    if(!data){ // السحابة فاضية
+    if(!has){ // السحابة فاضية
       if(!cloudSig&&isAdmin){await pushCloud();}
       return;}
-    const s=sig(data);
+    const s=sigW(raw);
     if(cloudSig===null){ // أول تحميل: السحابة هي المرجع دائماً
-      cloudSig=s;STATE=data;saveLocal();render();return;}
+      cloudSig=s;applyDoc(raw);render();return;}
     if(s!==cloudSig&&!dirty){ // تغيير من جهاز آخر (ليس تعديلاً محلياً غير مرفوع)
-      const changed=s!==sig(STATE);
-      cloudSig=s;STATE=data;saveLocal();
+      const changed=s!==sigW(DOC);
+      cloudSig=s;applyDoc(raw);
       if(changed){render();if(announce)showToast();}}
   }catch(e){setDot(false);}}
 setInterval(()=>pullCloud(true),12000);
@@ -460,7 +646,7 @@ document.addEventListener("visibilitychange",()=>{if(!document.hidden)pullCloud(
 window.addEventListener("focus",()=>pullCloud(true));
 function openMenu(){document.getElementById("drawer").classList.add("open");document.getElementById("overlay").classList.add("open");}
 function openInfo(){document.getElementById("infoModal").classList.add("open");document.getElementById("overlay").classList.add("open");}
-function closeAll(){["drawer","infoModal"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove("open");});
+function closeAll(){["drawer","infoModal","weeksModal","newWeekModal"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove("open");});
   if(!document.getElementById("dlgModal").classList.contains("open"))document.getElementById("overlay").classList.remove("open");
   document.querySelectorAll(".rowmenu").forEach(m=>m.classList.remove("open"));closeDropdowns();}
 document.addEventListener("click",e=>{if(!e.target.closest(".empcell"))document.querySelectorAll(".rowmenu").forEach(m=>m.classList.remove("open"));});
@@ -611,7 +797,7 @@ function setView(v,btn){VIEW=v;document.querySelectorAll(".tab").forEach(t=>t.cl
 window.addEventListener("beforeprint",()=>{if(VIEW!=="all"){VIEW="all";render();}});
 window.addEventListener("afterprint",()=>{render();});
 function render(){
-  applyLock();
+  applyLock();renderWeekbar();
   head();const tb=document.getElementById("tb");tb.innerHTML="";
   const idxs=viewRows();
   const rowHtml=ri=>{const row=STATE[ri];
@@ -622,7 +808,7 @@ function render(){
     const more=document.createElement("button");more.className="more";more.textContent="⋮";
     const menu=document.createElement("div");menu.className="rowmenu";
     const del=document.createElement("button");del.className="danger";del.textContent="🗑 حذف الموظف";
-    del.onclick=async e=>{e.stopPropagation();if(!isAdmin){dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}if(await dlgConfirm("حذف "+row.name+"؟")){STATE.splice(ri,1);save();render();}};
+    del.onclick=async e=>{e.stopPropagation();if(!isAdmin){dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}if(await dlgConfirm("حذف "+row.name+" من <b>الأسبوع رقم ("+WKS.num+")</b>؟")){STATE.splice(ri,1);save();render();}};
     menu.appendChild(del);
     more.addEventListener("click",e=>{e.stopPropagation();document.querySelectorAll(".rowmenu").forEach(m=>{if(m!==menu)m.classList.remove("open");});menu.classList.toggle("open");});
     const brOpts=["جده","طائف","مصر","أوبريشن"].map(b=>[b,b]);
@@ -706,9 +892,10 @@ function validate(S){
     }
   }
   return null;}
-function buildRandom(){
+function buildRandom(roster){
+  const BASE=roster&&roster.length?roster:SEED;
   for(let att=0;att<200;att++){
-    const S=SEED.map(r=>({...r,shifts:Array(7).fill(null)}));
+    const S=BASE.map(r=>({...r,shifts:Array(7).fill(null)}));
     const avail=(r,di)=>r.shifts[di]===null && r.shifts[di-1]!=="N";
     // 1) الليالي (تفضيل جدة) — واحد يومياً، اليوم بعده إجازة
     const nightPool=[...shuffle(S.filter(r=>r.br==="جده")),...shuffle(S.filter(r=>r.br==="طائف"))];
@@ -783,10 +970,14 @@ function buildRandom(){
 async function generateRandom(){
   if(!isAdmin){dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}
   if(!await dlgConfirm("توليد سيكل جديد بالقواعد (صباحي واحد لكل فرع + ليلي واحد)؟"))return;
-  const res=buildRandom();if(!res){dlgAlert("تعذّر التوليد — جرّب مرة أخرى.");return;}
-  STATE=res;save();closeAll();render();}
-function addRow(){if(!isAdmin){dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}STATE.push({name:"موظف جديد",br:"جده",f:0,shifts:["O","O","O","O","O","O","O"]});save();render();}
-async function resetTable(){if(!isAdmin){dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}if(await dlgConfirm("استرجاع الجدول الأساسي؟")){STATE=SEED.map(r=>({...r,shifts:[...r.shifts]}));save();render();}}
+  const res=buildRandom(STATE.map(r=>({name:r.name,br:r.br,f:r.f})));
+  if(!res){dlgAlert("تعذّر التوليد بهذه القائمة — جرّب مجدداً أو وزّع يدوياً.");return;}
+  setRows(res);save();closeAll();render();}
+function addRow(){if(!isAdmin){dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}
+  STATE.push({name:"موظف جديد",br:"جده",f:0,shifts:["O","O","O","O","O","O","O"]});save();render();
+  dlgAlert("أُضيف الموظف في <b>الأسبوع رقم ("+WKS.num+")</b> فقط.<br>لو موجود في أسبوع آخر استخدم: 🗂️ كل الأسابيع ← 🧩 توحيد قائمة الموظفين.");}
+async function resetTable(){if(!isAdmin){dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}
+  if(await dlgConfirm("استرجاع الجدول الأساسي <b>لأسبوع ("+WKS.num+")</b> فقط؟ الأسابيع الأخرى لن تتغيّر.")){setRows(SEED.map(r=>({...r,shifts:[...r.shifts]})));save();render();}}
 const LAB={D:"8ص–4م",S:"سبليت 9–12 + 2–7",K:"9ص–5م",G:"10ص–6م",A:"11ص–7م",B:"1م–9م",E:"3م–11م",C:"4م–12ص",N:"ليلي 12ص–8ص",O:"إجازة"};
 const XL={D:["#E8F6F4","#0C5160"],S:["#FDEBD8","#C55A11"],K:["#E2EEFB","#1A5FA0"],G:["#E3F5EA","#1B7A43"],A:["#EFEEF9","#4F4F9E"],B:["#5B5BB0","#FFFFFF"],E:["#0C5160","#FFFFFF"],C:["#1F5FA8","#FFFFFF"],N:["#332C64","#FFFFFF"],O:["#EFF2F4","#64747E"]};
 function exportExcel(){
@@ -796,7 +987,7 @@ function exportExcel(){
     +'<style>td,th{mso-number-format:"\\@";font-family:Cairo,Arial,sans-serif;border:1px solid #D8E0E6;}th{font-weight:bold;}</style></head><body dir="rtl">';
   t+='<table border="1" cellspacing="2" cellpadding="6">';
   t+='<tr><td colspan="10" style="background:#0C5160;color:#fff;font-size:18px;font-weight:bold;text-align:center;padding:12px">شركة رواد النخبة للاستقدام — RAWAD ALNUKHBA</td></tr>';
-  t+='<tr><td colspan="10" style="background:#2FB3A6;color:#fff;font-size:13px;font-weight:bold;text-align:center;padding:8px">جدول الشفتات (تشغيل 24 ساعة) — من السبت 5 سبتمبر إلى الجمعة 11 سبتمبر 2026</td></tr>';
+  t+='<tr><td colspan="10" style="background:#2FB3A6;color:#fff;font-size:13px;font-weight:bold;text-align:center;padding:8px">جدول الشفتات (تشغيل 24 ساعة) — الأسبوع رقم ('+WKS.num+') — '+h(rangeOf(WKS.start))+'</td></tr>';
   t+='<tr style="background:#0C5160;color:#fff;font-weight:bold;text-align:center">';
   t+='<th style="width:150px">الموظف</th><th style="width:70px">الفرع</th>';
   DAYS.forEach((d,i)=>t+='<th style="width:95px">'+h(d)+'<br><span style="font-size:10px;font-weight:normal">'+h(DATES[i])+'</span></th>');
@@ -824,11 +1015,17 @@ function exportExcel(){
   sum("أوبريشن",di=>STATE.filter(r=>r.br==="أوبريشن"&&r.shifts[di]!=="O").length,"#1B7A43");
   t+='</table></body></html>';
   const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["﻿"+t],{type:"application/vnd.ms-excel"}));
-  a.download="جدول_رواد_النخبة.xls";a.click();}
-function exportJSON(){const b=new Blob([JSON.stringify(STATE,null,2)],{type:"application/json"});
-  const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="رواد_النخبة_نسخة.json";a.click();}
+  a.download="جدول_رواد_النخبة_أسبوع"+WKS.num+".xls";a.click();}
+function exportJSON(){const b=new Blob([JSON.stringify({v:2,active:DOC.active,weeks:DOC.weeks.map(w=>({start:w.start,num:w.num,rows:w.rows}))},null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="رواد_النخبة_كل_الأسابيع.json";a.click();}
 function importJSON(ev){if(!isAdmin){ev.target.value="";dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}const f=ev.target.files[0];if(!f)return;const rd=new FileReader();
-  rd.onload=()=>{try{const d=JSON.parse(rd.result);if(Array.isArray(d)){STATE=d;save();render();closeAll();dlgAlert("تم الاستيراد.");}else dlgAlert("ملف غير صالح.");}catch(e){dlgAlert("تعذر القراءة.");}};
+  rd.onload=()=>{try{const d=JSON.parse(rd.result);
+    const arr=Array.isArray(d), docOK=!!(d&&Array.isArray(d.weeks)&&d.weeks.length);
+    if(!arr&&!docOK){dlgAlert("ملف غير صالح.");return;}
+    if(arr){setRows(norm(d));}
+    else{const act=DOC.active;DOC=normDoc(d);if(!DOC.weeks.some(w=>w.key===act))DOC.active=pickBestKey(DOC.weeks);bindWeek();}
+    save();saveLocal();render();closeAll();dlgAlert("✅ تم استيراد "+(arr?("أسبوع ("+WKS.num+")"):("عدد "+DOC.weeks.length+" أسبوع"))+".");
+  }catch(e){dlgAlert("تعذر القراءة.");}};
   rd.readAsText(f);ev.target.value="";}
 /* ============ صلاحيات المشرف / العرض ============ */
 function applyLock(){
@@ -854,32 +1051,156 @@ async function adminToggle(){
   if(v===null)return;
   const pin=v.trim();if(!pin)return;
   setDotText("🔐 جارٍ التحقق من كود المشرف…");
-  const ok=await rpcSave(STATE,pin); // تحقّق من الكود بمحاولة حفظ فعلية عبر السيرفر
+  const ok=await rpcSave(cloudDoc(),pin); // تحقّق من الكود بمحاولة حفظ فعلية عبر السيرفر
   if(ok){isAdmin=true;adminPin=pin;try{sessionStorage.setItem(ADMIN_KEY,pin);}catch(e){}applyLock();render();setDot(true);dlgAlert("✅ تم تفعيل وضع المشرف — يمكنك التعديل الآن.");}
   else{setDot(false);dlgAlert("❌ كود غير صحيح أو تعذّر الاتصال بالخادم. التعديل يظل مقفولاً.");}
 }
 function setDotText(txt){const t=document.getElementById("cloudTxt");if(t)t.textContent=txt;}
 
-/* رقم الأسبوع: محسوب حسب تاريخ بداية الفترة (السبت) ويتحدّث تلقائياً عند تعديل التاريخ */
-function parseFirstDate(txt){
-  const months={"يناير":0,"فبراير":1,"مارس":2,"أبريل":3,"مايو":4,"يونيو":5,"يوليو":6,"أغسطس":7,"سبتمبر":8,"أكتوبر":9,"نوفمبر":10,"ديسمبر":11};
-  const m=txt.match(/(\d{1,2})\s+([أ-ي]+)\s+(\d{4})/);
-  if(!m)return null;
-  const mo=months[m[2].trim()];if(mo===undefined)return null;
-  const d=new Date(+m[3],mo,+m[1]);
-  return isNaN(d)?null:d;
+/* ============ واجهة الأسابيع: شريط التنقّل + النوافذ ============ */
+function rangeChip(){const w=WKS;
+  if(window.innerWidth>=700)return rangeOf(w.start);
+  const st=dateOf(w.start),e=addDays(st,6);
+  return st.getMonth()===e.getMonth()
+    ? (st.getDate()+"–"+e.getDate()+" "+AR_MONTHS[st.getMonth()])
+    : (st.getDate()+" "+AR_MONTHS[st.getMonth()]+" – "+e.getDate()+" "+AR_MONTHS[e.getMonth()]);}
+function renderWeekbar(){
+  bindWeek();
+  const w=WKS,i=weekIdx(),n=DOC.weeks.length;
+  const set=(id,t)=>{const el=document.getElementById(id);if(el)el.textContent=t;};
+  set("wkNum","الأسبوع رقم ("+w.num+")");
+  set("wkRange",rangeChip());
+  const wn=warnCount(w);
+  set("wkStaff",w.rows.length+" موظف · "+(wn?("⚠️ "+wn+" تنبيه راحة"):"بلا تنبيهات"));
+  const pv=document.getElementById("wkPrev"),nx=document.getElementById("wkNext");
+  if(pv)pv.disabled=(i<=0);
+  if(nx)nx.disabled=(i>=n-1);
+  set("wkTotal",String(n));
+  set("heroWeekCount",(n===1?"أسبوع واحد محفوظ":(n+" أسابيع محفوظة")));
+  const jp=document.getElementById("wkJump");
+  if(jp)jp.style.display=(w.key===pickBestKey(DOC.weeks))?"none":"inline-flex";
+  const pw=document.getElementById("printWeek");
+  if(pw)pw.textContent="جدول الشفتات — الأسبوع رقم ("+w.num+") — "+rangeOf(w.start);
 }
-/* الأسبوع الحالي: السبت 5 سبتمبر 2026 = الأسبوع رقم (2) مرجع */
-function weekOfYear(d){
-  const anchor=new Date(2026,8,5);
-  const weeks=Math.round((d-anchor)/(7*864e5));
-  return 2+weeks;}
-document.querySelectorAll(".hero-pill [contenteditable]").forEach(el=>{
-  el.addEventListener("blur",()=>{
-    const wt=document.getElementById("weekTitle");if(!wt||el===wt)return;
-    const d=parseFirstDate(el.textContent);
-    if(d){const w=weekOfYear(d);wt.textContent="الأسبوع رقم ("+w+")";}
-  });});
+function switchWeek(key){
+  if(dirty)pushCloud();
+  if(!DOC.weeks.some(w=>w.key===key)){return;}
+  DOC.active=key;saveLocal();bindWeek();closeAll();render();
+}
+function stepWeek(delta){
+  const i=weekIdx()+delta;
+  if(i<0||i>=DOC.weeks.length)return;
+  switchWeek(DOC.weeks[i].key);
+}
+function jumpToCurrent(){const k=pickBestKey(DOC.weeks);if(k!==DOC.active)switchWeek(k);}
+function openWeeks(){renderWeekList();
+  document.getElementById("weeksModal").classList.add("open");
+  document.getElementById("overlay").classList.add("open");}
+function renderWeekList(){
+  const box=document.getElementById("wkList");if(!box)return;
+  box.innerHTML=DOC.weeks.slice().reverse().map(w=>{
+    const act=w.key===DOC.active,wn=warnCount(w);
+    return '<button type="button" class="wk-item'+(act?" active":"")+'" onclick="switchWeek(\''+w.key+'\')">'
+      +'<span class="wn">'+w.num+'</span>'
+      +'<span class="wt"><b>'+rangeOf(w.start)+'</b><span>'+w.rows.length+' موظف · '
+        +(wn?("⚠️ "+wn+" تنبيه راحة"):"بلا تنبيهات")+(act?"":" · اضغط للعرض")+'</span></span>'
+      +'<span class="wtag'+(act?"":" off")+'">'+(act?"✔ معروض":"عرض")+'</span></button>';
+  }).join("");
+  const del=document.getElementById("wkDelBtn");
+  if(del)del.style.display=(DOC.weeks.length<2)?"none":"inline-flex";
+}
+/* ===== نافذة أسبوع جديد / تعديل البداية ===== */
+let NWD={start:ANCHOR_ISO,mode:"roster",edit:null};
+const NWD_OPTS=[
+  ["roster","🧑‍🤝‍🧑","نسخ قائمة الموظفين فقط","كل الشفتات تبدأ إجازة، وتوزّعها بنفسك أو بالمولّد"],
+  ["copy","📋","تكرار جدول الأسبوع المعروض","نفس الموظفين ونفس الشفتات، تعدّل ما يلزم"],
+  ["smart","🎲","توليد سيكل ذكي بالقواعد","ليلي واحد يومياً + افتتاح واحد لكل فرع + راحة 12 ساعة"]
+];
+function nwdPaint(){
+  const st=dateOf(NWD.start),e=addDays(st,6);
+  const d=document.getElementById("nwdDate");if(d)d.textContent=fmtDay(st)+" "+st.getFullYear()+"  ←  "+fmtDay(e);
+  const nm=document.getElementById("nwdNum");if(nm)nm.textContent="الأسبوع رقم ("+weekNumOf(NWD.start)+")";
+  document.querySelectorAll("#nwopts .nwopt").forEach(b=>b.classList.toggle("sel",b.getAttribute("data-m")===NWD.mode));
+}
+function nwdMode(m){NWD.mode=m;nwdPaint();}
+function nwdStep(n){NWD.start=isoOf(addDays(dateOf(NWD.start),n));nwdPaint();}
+function openNWD(){document.getElementById("newWeekModal").classList.add("open");document.getElementById("overlay").classList.add("open");}
+function newWeekDialog(){
+  if(!isAdmin){closeAll();dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}
+  if(!STATE.length){dlgAlert("أضف الموظفين أولاً لهذا الأسبوع.");return;}
+  NWD={start:isoOf(addDays(dateOf(DOC.weeks[DOC.weeks.length-1].start),7)),mode:"roster",edit:null};
+  document.getElementById("nwdTitle").textContent="📅 إضافة أسبوع جديد";
+  document.getElementById("nwdOk").textContent="إنشاء الأسبوع";
+  document.getElementById("nwdHint").innerHTML="التاريخ محسوب تلقائياً: السبت بعد آخر أسبوع محفوظ، وأزرار ← → تتنقّل بأسبوع كامل."
+    +"<br>الأسبوع الجديد سينسخ قائمة الموظفين الحالية ("+STATE.length+" موظف) بالطريقة التي تختارها.";
+  document.getElementById("nwopts").innerHTML=NWD_OPTS.map(o=>'<button type="button" class="nwopt" data-m="'+o[0]+'" onclick="nwdMode(\''+o[0]+'\')">'
+    +'<span class="oi">'+o[1]+'</span><span class="ot"><b>'+o[2]+'</b><span>'+o[3]+'</span></span><span class="oc"></span></button>').join("");
+  document.getElementById("nwopts").style.display="flex";
+  nwdPaint();closeAll();openNWD();
+}
+function editWeekDate(){
+  if(!isAdmin){dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}
+  NWD={start:WKS.start,mode:"edit",edit:WKS.key};
+  document.getElementById("nwdTitle").textContent="✎ بداية الأسبوع رقم ("+WKS.num+")";
+  document.getElementById("nwdOk").textContent="حفظ التاريخ";
+  document.getElementById("nwdHint").innerHTML="غيّر تاريخ بداية الأسبوع (دائماً يبدأ السبت). الشفتات تبقى كما هي وتُعاد تسمية الأيام."
+    +"<br>رقم الأسبوع يتحدّث تلقائياً حسب التاريخ.";
+  document.getElementById("nwopts").innerHTML="";
+  document.getElementById("nwopts").style.display="none";
+  nwdPaint();
+}
+async function confirmNewWeek(){
+  if(!isAdmin){dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}
+  const key=NWD.start;
+  if(DOC.weeks.some(w=>w.key===key&&w.key!==NWD.edit)){dlgAlert("هذا الأسبوع محفوظ بالفعل — اختر تاريخاً آخر.");return;}
+  if(NWD.edit){
+    const w=DOC.weeks.find(x=>x.key===NWD.edit);
+    if(w){w.start=key;w.key=key;w.num=weekNumOf(key);
+      DOC.weeks.sort((a,b)=>a.start<b.start?-1:1);DOC.active=key;
+      save();saveLocal();bindWeek();closeAll();render();
+      dlgAlert("✅ تم ضبط بداية الأسبوع على <b>"+fmtDay(dateOf(key))+"</b> — الأسبوع رقم ("+w.num+").");}
+    return;}
+  let rows,label="";
+  if(NWD.mode==="copy"){rows=STATE.map(r=>({name:r.name,br:r.br,f:r.f,shifts:[...r.shifts]}));label="بنسخ جدول الأسبوع السابق";}
+  else if(NWD.mode==="smart"){
+    const gen=buildRandom(STATE.map(r=>({name:r.name,br:r.br,f:r.f})));
+    if(gen){rows=gen.map(r=>({name:r.name,br:r.br,f:r.f,shifts:[...r.shifts]}));label="بتوليد سيكل ذكي";}
+    else{rows=STATE.map(r=>({name:r.name,br:r.br,f:r.f,shifts:["O","O","O","O","O","O","O"]}));label="تعذّر التوليد — نسخ الموظفين فقط";}
+  }else{rows=STATE.map(r=>({name:r.name,br:r.br,f:r.f,shifts:["O","O","O","O","O","O","O"]}));label="بنسخ قائمة الموظفين";}
+  DOC.weeks.push(normWeek({start:key,rows:rows}));
+  DOC.weeks.sort((a,b)=>a.start<b.start?-1:1);
+  DOC.active=key;
+  save();saveLocal();bindWeek();closeAll();render();
+  dlgAlert("✅ تم إنشاء <b>الأسبوع رقم ("+weekNumOf(key)+")</b><br>"+rangeOf(key)+"<br>"+rows.length+" موظف — "+label+".");
+}
+async function deleteWeek(){
+  if(!isAdmin){dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}
+  if(DOC.weeks.length<2){dlgAlert("لا يمكن حذف الأسبوع الوحيد.");return;}
+  const w=WKS;
+  if(!await dlgConfirm("حذف <b>الأسبوع رقم ("+w.num+")</b> بكل شفتاته؟<br>"+rangeOf(w.start)+"<br>بقية الأسابيع لا تتأثر."))return;
+  const i=DOC.weeks.indexOf(w);
+  DOC.weeks.splice(i,1);
+  DOC.active=DOC.weeks[Math.max(0,i-1)].key;
+  save();saveLocal();bindWeek();closeAll();render();
+}
+async function syncRoster(){
+  if(!isAdmin){dlgAlert("التعديل مقفول — ادخل بكود المشرف أولاً 🔒");return;}
+  const ref=WKS.rows;let added=0;
+  DOC.weeks.forEach(w=>{if(w.key===WKS.key)return;
+    ref.forEach(r=>{if(!w.rows.some(x=>x.name===r.name)){
+      w.rows.push({name:r.name,br:r.br,f:r.f,shifts:["O","O","O","O","O","O","O"]});added++;}});});
+  if(!added){dlgAlert("قائمة الموظفين موحّدة في كل الأسابيع بالفعل ✅");return;}
+  save();saveLocal();closeAll();render();
+  dlgAlert("✅ تمت إضافة "+added+" سطراً في الأسابيع الأخرى (بإجازة) — راجع التوزيع.");
+}
+let wkRz=null;
+window.addEventListener("resize",()=>{clearTimeout(wkRz);wkRz=setTimeout(()=>{try{renderWeekbar();}catch(e){}},250);});
+document.addEventListener("keydown",e=>{
+  if(!e.altKey||(e.key!=="ArrowLeft"&&e.key!=="ArrowRight"))return;
+  const a=document.activeElement;
+  if(a&&(a.isContentEditable||a.tagName==="INPUT"))return;
+  e.preventDefault();stepWeek(e.key==="ArrowLeft"?1:-1);
+});
 
 /* بدء التشغيل: اعرض المحلي فوراً ثم اجلب السحابة (المرجع الموحّد) */
 applyLock();
