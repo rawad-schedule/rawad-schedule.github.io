@@ -489,7 +489,7 @@ body.locked .readonly-note{display:block;}
       أي تعديل بتعمله بيتحفظ على جهازك <b>كمسودة</b> — حد تاني فاتح اللينك بيشوف <b>آخر نسخة منشورة</b> بس.
       لما تخلص اضغط <b>📤 نشر التعديلات</b> (من شريط النشر فوق أو من القائمة الجانبية) عشان تظهر للجميع.
       • <b>↺ تراجع عن المسودة:</b> يمسح تعديلاتك غير المنشورة ويرجّعك للمنشور.<br>
-      • <b>⚙️ النشر التلقائي:</b> لو فتحته كل تعديل بينشر فوراً (زي الأول).<br>
+      • <b>⚙️ النشر التلقائي:</b> لو فتحته كل تعديل بينشر فوراً (زي الأول).<br><br>      • اختصار سريع: <b>Ctrl + Enter</b> = نشر فوراً.
       • النشر بيأثّر على <b>الأسابيع اللي عدّلتها أنت</b> وبس — أسابيع تانية عدّلها زميلك في نفس الوقت بتسيبها زي ما هي.
       <h4>📅 الأسابيع</h4>
       كل أسبوع جدول مستقل. من شريط الأسابيع فوق: أسهم للتنقّل بين الأسابيع، وزر <b>＋ أسبوع جديد</b> ينشئ السبت التالي تلقائياً مع خيار: نسخ قائمة الموظفين فقط، أو تكرار جدول الأسبوع، أو توليد سيكل ذكي. ورقم الأسبوع والتواريخ تُحسب من تاريخ البداية.
@@ -747,6 +747,9 @@ async function publishNow(silent){
 }
 function save(){if(!isAdmin)return;saveLocal();refreshPending();
   if(AUTO){clearTimeout(pushTimer);pushTimer=setTimeout(()=>publishNow(true),600);}}
+document.addEventListener("keydown",e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==="Enter"&&isAdmin){e.preventDefault();publishNow();}
+});
 function toggleAuto(){
   AUTO=!AUTO;try{localStorage.setItem(AUTOK,AUTO?"1":"0");}catch(e){}
   refreshPending();
